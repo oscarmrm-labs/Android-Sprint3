@@ -45,21 +45,12 @@ class MainActivity : AppCompatActivity() {
 
         val apiService = retrofit.create(MeteoAPIService::class.java)
 
-        val route = "forecast?" +
-                "latitude=$latitude" +
-                "&longitude=$longitude" +
-                "&current=" +
-                    "temperature_2m," +
-                    "is_day," +
-                    "rain," +
-                    "showers," +
-                    "snowfall"
-        Log.i(TAG, "requestCurrentTime: Ruta => " + retrofit.baseUrl() + route)
-
         val latitud = "20.0"
         val longitud = "12.0"
         val currentParams = "temperature_2m,is_day,rain,showers,snowfall"
-        apiService.getWeather(latitud, longitud, currentParams).enqueue(object : Callback<ForecastResponse> {
+        val daily = "temperature_2m_max,temperature_2m_min,sunrise,sunset"
+        val forecastDays = "1"
+        apiService.getWeather(latitud, longitud, currentParams, daily, forecastDays).enqueue(object : Callback<ForecastResponse> {
             override fun onResponse(call: Call<ForecastResponse>, response: Response<ForecastResponse>) {
                 if (response.isSuccessful) {
                     Log.i(TAG, "onResponse: ${response.raw()}")
@@ -67,8 +58,14 @@ class MainActivity : AppCompatActivity() {
                     Log.w(TAG, "onResponse: DATOS ACTUALES =>  ${response.body()?.current}")
                     val currentWeather: CurrentWeather? = response.body()?.current
                     Log.i(TAG, "onResponse: OBJETO => ${currentWeather}")
-                    binding.textView2.text = currentWeather?.temperature2m.toString()
+                    binding.textView2.text = currentWeather?.temperature.toString()
                     binding.textView3.text = currentWeather?.rain.toString()
+                    val todayWeather: Daily? = response.body()?.daily
+                    Log.i(TAG, "onResponse: OBJETO => ${todayWeather}")
+                    binding.textView4.text = "Min.: ${todayWeather?.temperatureMin?.get(0).toString()}"
+                    binding.textView5.text = "Max.: ${todayWeather?.temperatureMax?.get(0).toString()}"
+                    binding.textView6.text = todayWeather?.sunrise?.get(0)
+                    binding.textView7.text = todayWeather?.sunset?.get(0)
 
                 } else {
 
