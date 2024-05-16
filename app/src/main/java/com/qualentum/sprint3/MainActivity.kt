@@ -1,12 +1,16 @@
 package com.qualentum.sprint3
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.qualentum.sprint3.databinding.ActivityMainBinding
+import com.qualentum.sprint3.list.DayAdapter
+import com.qualentum.sprint3.list.DayInfo
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,6 +29,44 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         transparentSystemBars()
         requestCurrentTime()
+        setUprDailyRecyclerView()
+    }
+
+    private fun setUprDailyRecyclerView() {
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.adapter =
+            DayAdapter(createMutableList()) { dayInfo -> changeScreen(dayInfo) }
+    }
+
+    private fun changeScreen(dayInfo: DayInfo) {
+        val i = Intent(this, DetailDay::class.java).apply {
+            putExtra("dayInfo", dayInfo.sunrise)
+        }
+        startActivity(i)
+    }
+
+    fun createMutableList(): MutableList<DayInfo> {
+        var dailyInfo: MutableList<DayInfo> = ArrayList()
+        dailyInfo.add(DayInfo("1", "sunset", "temperatureMax", "temperatureMin", "time"))
+        dailyInfo.add(DayInfo("2", "sunset", "temperatureMax", "temperatureMin", "time"))
+        dailyInfo.add(DayInfo("3", "sunset", "temperatureMax", "temperatureMin", "time"))
+        dailyInfo.add(DayInfo("4", "sunset", "temperatureMax", "temperatureMin", "time"))
+        dailyInfo.add(DayInfo("5", "sunset", "temperatureMax", "temperatureMin", "time"))
+        dailyInfo.add(DayInfo("6", "sunset", "temperatureMax", "temperatureMin", "time"))
+        dailyInfo.add(DayInfo("7", "sunset", "temperatureMax", "temperatureMin", "time"))
+        dailyInfo.add(DayInfo("8", "sunset", "temperatureMax", "temperatureMin", "time"))
+        dailyInfo.add(DayInfo("9", "sunset", "temperatureMax", "temperatureMin", "time"))
+        dailyInfo.add(DayInfo("10", "sunset", "temperatureMax", "temperatureMin", "time"))
+        dailyInfo.add(DayInfo("11", "sunset", "temperatureMax", "temperatureMin", "time"))
+        dailyInfo.add(DayInfo("12", "sunset", "temperatureMax", "temperatureMin", "time"))
+        dailyInfo.add(DayInfo("13", "sunset", "temperatureMax", "temperatureMin", "time"))
+        dailyInfo.add(DayInfo("14", "sunset", "temperatureMax", "temperatureMin", "time"))
+        dailyInfo.add(DayInfo("15", "sunset", "temperatureMax", "temperatureMin", "time"))
+        return dailyInfo
+    }
+
+    fun requestDailyInfo() {
+
     }
 
     private fun transparentSystemBars() {
