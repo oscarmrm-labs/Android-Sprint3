@@ -95,5 +95,16 @@
         app:barrierDirection="bottom"
         app:constraint_referenced_ids="textView6,textView7" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/brMain"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:listitem="@layout/item_day_info"
+        android:layout_marginTop="70dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
