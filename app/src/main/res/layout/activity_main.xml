@@ -64,12 +64,36 @@
         android:text="Max.: 20º" />
 
     <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/barrierMain"
+        android:id="@+id/brTemperature"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:constraint_referenced_ids="textView4,textView5"
         app:barrierDirection="bottom" />
 
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/brTemperature"
+        app:layout_constraintEnd_toStartOf="@id/vGlCenter"
+        android:layout_marginEnd="10dp"
+        android:text="Min.: 10º" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/brTemperature"
+        app:layout_constraintStart_toEndOf="@id/vGlCenter"
+        android:layout_marginStart="10dp"
+        android:text="Max.: 20º" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/brMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="textView6,textView7" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

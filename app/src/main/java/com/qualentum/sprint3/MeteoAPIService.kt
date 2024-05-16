@@ -10,7 +10,9 @@ interface MeteoAPIService {
     fun getWeather(
         @Query("latitude") latitud: String,
         @Query("longitude") longitud: String,
-        @Query("current") currentParams: String
+        @Query("current") currentParams: String,
+        @Query("daily") daily: String,
+        @Query("forecast_days") forecastDays: String
     ): Call<ForecastResponse>
 
 }

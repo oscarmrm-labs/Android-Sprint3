@@ -3,33 +3,53 @@ package com.qualentum.sprint3
 import com.google.gson.annotations.SerializedName
 
 data class ForecastResponse(
-    @SerializedName("latitude") val latitude: Double,
-    @SerializedName("longitude") val longitude: Double,
+    val latitude: Double,
+    val longitude: Double,
     @SerializedName("generationtime_ms") val generationTimeMs: Double,
     @SerializedName("utc_offset_seconds") val utcOffsetSeconds: Int,
-    @SerializedName("timezone") val timezone: String,
+    val timezone: String,
     @SerializedName("timezone_abbreviation") val timezoneAbbreviation: String,
-    @SerializedName("elevation") val elevation: Double,
-    @SerializedName("current_units") val currentUnits: CurrentUnits,
-    @SerializedName("current") val current: CurrentWeather
+    val elevation: Double,
+
+    val daily: Daily,
+    @SerializedName("daily_units") val dailyUnits: DailyUnits,
+
+    val currentUnits: CurrentUnits,
+    val current: CurrentWeather
 )
 
 data class CurrentUnits(
-    @SerializedName("time") val time: String,
-    @SerializedName("interval") val interval: String,
-    @SerializedName("temperature_2m") val temperature2m: String,
+    val time: String,
+    val interval: String,
+    @SerializedName("temperature_2m") val temperature: String,
     @SerializedName("is_day") val isDay: String,
-    @SerializedName("rain") val rain: String,
-    @SerializedName("showers") val showers: String,
-    @SerializedName("snowfall") val snowfall: String
+    val rain: String,
+    val showers: String,
+    val snowfall: String
 )
 
 data class CurrentWeather(
-    @SerializedName("time") val time: String,
-    @SerializedName("interval") val interval: Int,
-    @SerializedName("temperature_2m") val temperature2m: Double,
+    val time: String,
+    val interval: Int,
+    @SerializedName("temperature_2m") val temperature: Double,
     @SerializedName("is_day") val isDay: Int,
-    @SerializedName("rain") val rain: Double,
-    @SerializedName("showers") val showers: Double,
-    @SerializedName("snowfall") val snowfall: Double
+    val rain: Double,
+    val showers: Double,
+    val snowfall: Double
+)
+
+data class Daily(
+    val sunrise: List<String>,
+    val sunset: List<String>,
+    @SerializedName("temperature_2m_max") val temperatureMax: List<Double>,
+    @SerializedName("temperature_2m_min") val temperatureMin: List<Double>,
+    val time: List<String>
+)
+
+data class DailyUnits(
+    val sunrise: String,
+    val sunset: String,
+    @SerializedName("temperature_2m_max") val temperatureMax: String,
+    @SerializedName("temperature_2m_min") val temperatureMin: String,
+    val time: String
 )
