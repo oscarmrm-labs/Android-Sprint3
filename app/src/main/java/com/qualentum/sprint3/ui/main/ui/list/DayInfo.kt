@@ -1,4 +1,4 @@
-package com.qualentum.sprint3.main.ui.list
+package com.qualentum.sprint3.ui.main.ui.list
 
 data class DailyInfo(
     val time: List<String>,
