@@ -1,4 +1,4 @@
-package com.qualentum.sprint3.detail.ui.grid
+package com.qualentum.sprint3.ui.detail.grid
 
 data class Daily2(
     val apparent_temperature_max: List<Double>,

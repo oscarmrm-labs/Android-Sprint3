@@ -1,4 +1,4 @@
-package com.qualentum.sprint3.detail.ui
+package com.qualentum.sprint3.ui.detail
 
 import android.os.Bundle
 import android.util.Log
@@ -10,10 +10,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.qualentum.sprint3.MeteoAPIService
 import com.qualentum.sprint3.R
-import com.qualentum.sprint3.detail.ui.grid.CardData
-import com.qualentum.sprint3.detail.ui.grid.Daily2
-import com.qualentum.sprint3.detail.ui.grid.DayDetail
-import com.qualentum.sprint3.detail.ui.grid.GridRVAdapter
+import com.qualentum.sprint3.ui.detail.grid.CardData
+import com.qualentum.sprint3.ui.detail.grid.Daily2
+import com.qualentum.sprint3.ui.detail.grid.DayDetail
+import com.qualentum.sprint3.ui.detail.grid.GridRVAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

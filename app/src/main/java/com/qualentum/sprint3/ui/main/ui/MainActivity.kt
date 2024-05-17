@@ -1,4 +1,4 @@
-package com.qualentum.sprint3.ui.main
+package com.qualentum.sprint3.ui.main.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,15 +10,15 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.qualentum.sprint3.CurrentWeather
 import com.qualentum.sprint3.Daily
-import com.qualentum.sprint3.DetailDay
 import com.qualentum.sprint3.ForecastResponse
 import com.qualentum.sprint3.MeteoAPIService
 import com.qualentum.sprint3.R
 import com.qualentum.sprint3.databinding.ActivityMainBinding
-import com.qualentum.sprint3.ui.main.list.DailyInfo
-import com.qualentum.sprint3.ui.main.list.DailyResponse
-import com.qualentum.sprint3.ui.main.list.DayAdapter
-import com.qualentum.sprint3.ui.main.list.OneDay
+import com.qualentum.sprint3.ui.detail.DetailDay
+import com.qualentum.sprint3.ui.main.ui.list.DailyInfo
+import com.qualentum.sprint3.ui.main.ui.list.DailyResponse
+import com.qualentum.sprint3.ui.main.ui.list.DayAdapter
+import com.qualentum.sprint3.ui.main.ui.list.OneDay
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

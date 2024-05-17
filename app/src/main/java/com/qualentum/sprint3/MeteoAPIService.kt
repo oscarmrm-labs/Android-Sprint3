@@ -1,7 +1,7 @@
 package com.qualentum.sprint3
 
-import com.qualentum.sprint3.detail.ui.grid.DayDetail
-import com.qualentum.sprint3.main.ui.list.DailyResponse
+import com.qualentum.sprint3.ui.detail.grid.DayDetail
+import com.qualentum.sprint3.ui.main.ui.list.DailyResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
