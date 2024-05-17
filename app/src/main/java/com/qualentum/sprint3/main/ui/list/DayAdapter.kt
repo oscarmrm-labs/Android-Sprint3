@@ -1,4 +1,4 @@
-package com.qualentum.sprint3.ui.main.list
+package com.qualentum.sprint3.main.ui.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
