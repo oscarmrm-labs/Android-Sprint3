@@ -1,11 +1,11 @@
-package com.qualentum.sprint3.list
+package com.qualentum.sprint3.ui.main.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.qualentum.sprint3.R
 
-class DayAdapter(val dailyInfo: List<DayInfo>, private val onClickListener: (DayInfo) -> Unit) :
+class DayAdapter(val dailyInfo: List<OneDay>, private val onClickListener: (OneDay) -> Unit) :
     RecyclerView.Adapter<DayViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DayViewHolder {

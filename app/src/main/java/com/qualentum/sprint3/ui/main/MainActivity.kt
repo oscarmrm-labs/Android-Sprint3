@@ -1,4 +1,4 @@
-package com.qualentum.sprint3
+package com.qualentum.sprint3.ui.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,9 +8,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.qualentum.sprint3.CurrentWeather
+import com.qualentum.sprint3.Daily
+import com.qualentum.sprint3.DetailDay
+import com.qualentum.sprint3.ForecastResponse
+import com.qualentum.sprint3.MeteoAPIService
+import com.qualentum.sprint3.R
 import com.qualentum.sprint3.databinding.ActivityMainBinding
-import com.qualentum.sprint3.list.DayAdapter
-import com.qualentum.sprint3.list.DayInfo
+import com.qualentum.sprint3.ui.main.list.DailyInfo
+import com.qualentum.sprint3.ui.main.list.DailyResponse
+import com.qualentum.sprint3.ui.main.list.DayAdapter
+import com.qualentum.sprint3.ui.main.list.OneDay
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     val TAG = "TAG"
     val latitude = "52.52"
     val longitude = "13.41"
+    val forecastDaysConst = 7
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,44 +38,67 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         transparentSystemBars()
         requestCurrentTime()
-        setUprDailyRecyclerView()
+        requestDailyInfo()
     }
 
-    private fun setUprDailyRecyclerView() {
+    private fun setUprDailyRecyclerView(daily: DailyInfo?) {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter =
-            DayAdapter(createMutableList()) { dayInfo -> changeScreen(dayInfo) }
+            DayAdapter(inflateDaily(daily)) { oneDay -> changeScreen(oneDay) }
     }
 
-    private fun changeScreen(dayInfo: DayInfo) {
+    private fun changeScreen(dayInfo: OneDay) {
         val i = Intent(this, DetailDay::class.java).apply {
-            putExtra("dayInfo", dayInfo.sunrise)
+            putExtra("dayInfo", dayInfo.time)
         }
         startActivity(i)
     }
 
-    fun createMutableList(): MutableList<DayInfo> {
-        var dailyInfo: MutableList<DayInfo> = ArrayList()
-        dailyInfo.add(DayInfo("1", "sunset", "temperatureMax", "temperatureMin", "time"))
-        dailyInfo.add(DayInfo("2", "sunset", "temperatureMax", "temperatureMin", "time"))
-        dailyInfo.add(DayInfo("3", "sunset", "temperatureMax", "temperatureMin", "time"))
-        dailyInfo.add(DayInfo("4", "sunset", "temperatureMax", "temperatureMin", "time"))
-        dailyInfo.add(DayInfo("5", "sunset", "temperatureMax", "temperatureMin", "time"))
-        dailyInfo.add(DayInfo("6", "sunset", "temperatureMax", "temperatureMin", "time"))
-        dailyInfo.add(DayInfo("7", "sunset", "temperatureMax", "temperatureMin", "time"))
-        dailyInfo.add(DayInfo("8", "sunset", "temperatureMax", "temperatureMin", "time"))
-        dailyInfo.add(DayInfo("9", "sunset", "temperatureMax", "temperatureMin", "time"))
-        dailyInfo.add(DayInfo("10", "sunset", "temperatureMax", "temperatureMin", "time"))
-        dailyInfo.add(DayInfo("11", "sunset", "temperatureMax", "temperatureMin", "time"))
-        dailyInfo.add(DayInfo("12", "sunset", "temperatureMax", "temperatureMin", "time"))
-        dailyInfo.add(DayInfo("13", "sunset", "temperatureMax", "temperatureMin", "time"))
-        dailyInfo.add(DayInfo("14", "sunset", "temperatureMax", "temperatureMin", "time"))
-        dailyInfo.add(DayInfo("15", "sunset", "temperatureMax", "temperatureMin", "time"))
+    fun inflateDaily(daily: DailyInfo?): MutableList<OneDay> {
+        var dailyInfo: MutableList<OneDay> = ArrayList()
+        for (i in 0..forecastDaysConst - 1) {
+            dailyInfo.add(
+                OneDay(
+                    daily?.time?.get(i),
+                    daily?.temperature_2m_min?.get(i),
+                    daily?.temperature_2m_max?.get(i),
+                    daily?.rain_sum?.get(i),
+                    daily?.showers_sum?.get(i),
+                    daily?.snowfall_sum?.get(i)
+                )
+            )
+        }
         return dailyInfo
     }
 
     fun requestDailyInfo() {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://api.open-meteo.com/v1/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val apiService = retrofit.create(MeteoAPIService::class.java)
 
+        val latitud = 52.52
+        val longitud = 13.41
+        val dailyparams = "temperature_2m_max,temperature_2m_min,rain_sum,showers_sum,snowfall_sum"
+        apiService.getDaily(latitud, longitud, dailyparams, forecastDaysConst)
+            .enqueue(object : Callback<DailyResponse> {
+                override fun onResponse(
+                    call: Call<DailyResponse>,
+                    response: Response<DailyResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        val daily: DailyInfo? = response.body()?.daily
+                        setUprDailyRecyclerView(daily)
+                    } else {
+                        Log.w(TAG, "Error en la solicitud")
+                    }
+                }
+
+                override fun onFailure(call: Call<DailyResponse>, throwable: Throwable) {
+                    Log.w(TAG, "onFailure: ERROR => ${throwable.message}")
+                }
+            })
     }
 
     private fun transparentSystemBars() {
