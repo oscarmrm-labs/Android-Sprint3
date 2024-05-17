@@ -1,4 +1,4 @@
-package com.qualentum.sprint3.detail.ui.grid
+package com.qualentum.sprint3.ui.detail.grid
 
 import android.content.Context
 import android.view.LayoutInflater

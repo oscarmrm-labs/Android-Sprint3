@@ -1,4 +1,4 @@
-package com.qualentum.sprint3.detail.ui.grid
+package com.qualentum.sprint3.ui.detail.grid
 
 data class CardData(
     val title: String,

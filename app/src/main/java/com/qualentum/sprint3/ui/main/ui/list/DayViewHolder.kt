@@ -1,4 +1,4 @@
-package com.qualentum.sprint3.main.ui.list
+package com.qualentum.sprint3.ui.main.ui.list
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
