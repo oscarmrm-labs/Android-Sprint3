@@ -41,76 +41,18 @@ class MainActivity : AppCompatActivity() {
         requestDailyInfo()
     }
 
-    private fun setUprDailyRecyclerView(daily: DailyInfo?) {
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.adapter =
-            DayAdapter(inflateDaily(daily)) { oneDay -> changeScreen(oneDay) }
+//region transparentSystemBars
+private fun transparentSystemBars() {
+    enableEdgeToEdge()
+    ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+        v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+        insets
     }
+}
+//endregion
 
-    private fun changeScreen(dayInfo: OneDay) {
-        val i = Intent(this, DetailDay::class.java).apply {
-            putExtra("dayInfo", dayInfo.time)
-        }
-        startActivity(i)
-    }
-
-    fun inflateDaily(daily: DailyInfo?): MutableList<OneDay> {
-        var dailyInfo: MutableList<OneDay> = ArrayList()
-        for (i in 0..forecastDaysConst - 1) {
-            dailyInfo.add(
-                OneDay(
-                    daily?.time?.get(i),
-                    daily?.temperature_2m_min?.get(i),
-                    daily?.temperature_2m_max?.get(i),
-                    daily?.rain_sum?.get(i),
-                    daily?.showers_sum?.get(i),
-                    daily?.snowfall_sum?.get(i)
-                )
-            )
-        }
-        return dailyInfo
-    }
-
-    fun requestDailyInfo() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.open-meteo.com/v1/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val apiService = retrofit.create(MeteoAPIService::class.java)
-
-        val latitud = 52.52
-        val longitud = 13.41
-        val dailyparams = "temperature_2m_max,temperature_2m_min,rain_sum,showers_sum,snowfall_sum"
-        apiService.getDaily(latitud, longitud, dailyparams, forecastDaysConst)
-            .enqueue(object : Callback<DailyResponse> {
-                override fun onResponse(
-                    call: Call<DailyResponse>,
-                    response: Response<DailyResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        val daily: DailyInfo? = response.body()?.daily
-                        setUprDailyRecyclerView(daily)
-                    } else {
-                        Log.w(TAG, "Error en la solicitud")
-                    }
-                }
-
-                override fun onFailure(call: Call<DailyResponse>, throwable: Throwable) {
-                    Log.w(TAG, "onFailure: ERROR => ${throwable.message}")
-                }
-            })
-    }
-
-    private fun transparentSystemBars() {
-        enableEdgeToEdge()
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-    }
-
-
+//region requestCurrentTime
     private fun requestCurrentTime() {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://api.open-meteo.com/v1/")
@@ -152,4 +94,65 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
+
+//endregion
+
+//region RequestDailyInfo
+    fun requestDailyInfo() {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://api.open-meteo.com/v1/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val apiService = retrofit.create(MeteoAPIService::class.java)
+
+        val latitud = 52.52
+        val longitud = 13.41
+        val dailyparams = "temperature_2m_max,temperature_2m_min,rain_sum,showers_sum,snowfall_sum"
+        apiService.getDaily(latitud, longitud, dailyparams, forecastDaysConst).enqueue(object : Callback<DailyResponse> {
+            override fun onResponse(call: Call<DailyResponse>, response: Response<DailyResponse>) {
+                if (response.isSuccessful) {
+                    val daily: DailyInfo? = response.body()?.daily
+                    setUprDailyRecyclerView(daily)
+                } else {
+                    Log.w(TAG, "Error en la solicitud")
+                }
+            }
+
+            override fun onFailure(call: Call<DailyResponse>, throwable: Throwable) {
+                Log.w(TAG, "onFailure: ERROR => ${throwable.message}")
+            }
+        })
+    }
+
+    private fun setUprDailyRecyclerView(daily: DailyInfo?) {
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.adapter =
+            DayAdapter(inflateDaily(daily)) { oneDay -> changeScreen(oneDay) }
+    }
+
+    fun inflateDaily(daily: DailyInfo?): MutableList<OneDay> {
+        var dailyInfo: MutableList<OneDay> = ArrayList()
+        for (i in 0..forecastDaysConst - 1) {
+            dailyInfo.add(
+                OneDay(
+                    daily?.time?.get(i),
+                    daily?.temperature_2m_min?.get(i),
+                    daily?.temperature_2m_max?.get(i),
+                    daily?.rain_sum?.get(i),
+                    daily?.showers_sum?.get(i),
+                    daily?.snowfall_sum?.get(i)
+                )
+            )
+        }
+        return dailyInfo
+    }
+
+    private fun changeScreen(dayInfo: OneDay) {
+        val i = Intent(this, DetailDay::class.java).apply {
+            putExtra("dayInfo", dayInfo.time)
+        }
+        startActivity(i)
+    }
+    //endregion
+
 }
