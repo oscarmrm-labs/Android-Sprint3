@@ -28,8 +28,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     val TAG = "TAG"
-    val latitude = "52.52"
-    val longitude = "13.41"
+    val latitude = 40.41
+    val longitude = -3.70
     val forecastDaysConst = 7
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,12 +61,12 @@ private fun transparentSystemBars() {
 
         val apiService = retrofit.create(MeteoAPIService::class.java)
 
-        val latitud = "20.0"
-        val longitud = "12.0"
+        //val latitud = "20.0"
+        //val longitud = "12.0"
         val currentParams = "temperature_2m,is_day,rain,showers,snowfall"
         val daily = "temperature_2m_max,temperature_2m_min,sunrise,sunset"
         val forecastDays = "1"
-        apiService.getWeather(latitud, longitud, currentParams, daily, forecastDays).enqueue(object : Callback<ForecastResponse> {
+        apiService.getWeather(latitude, longitude, currentParams, daily, forecastDays).enqueue(object : Callback<ForecastResponse> {
             override fun onResponse(call: Call<ForecastResponse>, response: Response<ForecastResponse>) {
                 if (response.isSuccessful) {
                     Log.i(TAG, "onResponse: ${response.raw()}")
@@ -105,10 +105,10 @@ private fun transparentSystemBars() {
             .build()
         val apiService = retrofit.create(MeteoAPIService::class.java)
 
-        val latitud = 52.52
-        val longitud = 13.41
+        //val latitud = 52.52
+        //val longitud = 13.41
         val dailyparams = "temperature_2m_max,temperature_2m_min,rain_sum,showers_sum,snowfall_sum"
-        apiService.getDaily(latitud, longitud, dailyparams, forecastDaysConst).enqueue(object : Callback<DailyResponse> {
+        apiService.getDaily(latitude, longitude, dailyparams, forecastDaysConst).enqueue(object : Callback<DailyResponse> {
             override fun onResponse(call: Call<DailyResponse>, response: Response<DailyResponse>) {
                 if (response.isSuccessful) {
                     val daily: DailyInfo? = response.body()?.daily
