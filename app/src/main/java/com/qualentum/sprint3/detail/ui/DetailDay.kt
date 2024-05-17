@@ -1,4 +1,4 @@
-package com.qualentum.sprint3.ui.detail
+package com.qualentum.sprint3.detail.ui
 
 import android.os.Bundle
 import android.util.Log
@@ -8,12 +8,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.qualentum.sprint3.MeteoAPIService
 import com.qualentum.sprint3.R
-import com.qualentum.sprint3.ui.detail.grid.CardData
-import com.qualentum.sprint3.ui.detail.grid.Daily2
-import com.qualentum.sprint3.ui.detail.grid.DayDetail
-import com.qualentum.sprint3.ui.detail.grid.GridRVAdapter
+import com.qualentum.sprint3.detail.data.model.CardData
+import com.qualentum.sprint3.detail.data.model.day.DayDetailLists
+import com.qualentum.sprint3.detail.data.model.day.DayDetailResponse
+import com.qualentum.sprint3.main.data.repository.MeteoAPIService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -65,13 +64,13 @@ class DetailDay : AppCompatActivity() {
         val startDay = prueba.text.toString()
         val endDay = prueba.text.toString()
         apiService.getDayDetail(latitude, longitude, daily, startDay, endDay).enqueue(object :
-            Callback<DayDetail> {
-            override fun onResponse(call: Call<DayDetail>, response: Response<DayDetail>) {
+            Callback<DayDetailResponse> {
+            override fun onResponse(call: Call<DayDetailResponse>, response: Response<DayDetailResponse>) {
                 if (response.isSuccessful) {
                     Log.i(TAG, "onResponse: ${response.raw()}")
                     Log.w(TAG, "onResponse: DATOS =>  ${response.body()}")
                     Log.w(TAG, "onResponse: DATOS ACTUALES =>  ${response.body()?.daily}")
-                    val dayInfo: Daily2? = response.body()?.daily
+                    val dayInfo: DayDetailLists? = response.body()?.daily
                     setUpGrid(dayInfo)
                 } else {
 
@@ -79,12 +78,12 @@ class DetailDay : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<DayDetail>, throwable: Throwable) {
+            override fun onFailure(call: Call<DayDetailResponse>, throwable: Throwable) {
                 Log.w(TAG, "onFailure: ERROR => ${throwable.message}")
             }
         })
     }
-    fun setUpGrid(dayInfo: Daily2?){
+    fun setUpGrid(dayInfo: DayDetailLists?){
         var itemsList: MutableList<CardData> = ArrayList()
         itemsList.add(CardData("Max. Temp.", dayInfo?.temperature_2m_max?.get(0).toString()))
         itemsList.add(CardData("Min. Temp.", dayInfo?.temperature_2m_min?.get(0).toString()))

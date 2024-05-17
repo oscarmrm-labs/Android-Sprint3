@@ -1,4 +1,4 @@
-package com.qualentum.sprint3.ui.detail.grid
+package com.qualentum.sprint3.detail.ui
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,9 +7,10 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import com.qualentum.sprint3.R
+import com.qualentum.sprint3.detail.data.model.CardData
 
 class GridRVAdapter(
-    private val courseList: List<CardData>,
+    private val cardList: List<CardData>,
     private val context: Context
 ): BaseAdapter() {
 
@@ -18,7 +19,7 @@ class GridRVAdapter(
     private lateinit var subTitle: TextView
 
     override fun getCount(): Int {
-        return courseList.size
+        return cardList.size
     }
 
     override fun getItem(position: Int): Any? {
@@ -40,8 +41,8 @@ class GridRVAdapter(
         }
         title = convertView!!.findViewById(R.id.textView14)
         subTitle = convertView!!.findViewById(R.id.textView15)
-        title.setText(courseList.get(position).title)
-        subTitle.setText(courseList.get(position).subTitle)
+        title.setText(cardList.get(position).title)
+        subTitle.setText(cardList.get(position).subTitle)
         return convertView
     }
 }

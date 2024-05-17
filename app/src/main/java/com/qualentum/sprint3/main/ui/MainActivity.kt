@@ -1,4 +1,4 @@
-package com.qualentum.sprint3.ui.main.ui
+package com.qualentum.sprint3.main.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,17 +8,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.qualentum.sprint3.CurrentWeather
-import com.qualentum.sprint3.Daily
-import com.qualentum.sprint3.ForecastResponse
-import com.qualentum.sprint3.MeteoAPIService
 import com.qualentum.sprint3.R
 import com.qualentum.sprint3.databinding.ActivityMainBinding
-import com.qualentum.sprint3.ui.detail.DetailDay
-import com.qualentum.sprint3.ui.main.ui.list.DailyInfo
-import com.qualentum.sprint3.ui.main.ui.list.DailyResponse
-import com.qualentum.sprint3.ui.main.ui.list.DayAdapter
-import com.qualentum.sprint3.ui.main.ui.list.OneDay
+import com.qualentum.sprint3.detail.ui.DetailDay
+import com.qualentum.sprint3.main.data.model.nextdays.DailyForecastResponse
+import com.qualentum.sprint3.main.data.model.nextdays.DailyLists
+import com.qualentum.sprint3.main.data.model.nextdays.OneDay
+import com.qualentum.sprint3.main.data.model.today.CurrentDay
+import com.qualentum.sprint3.main.data.model.today.CurrentWeather
+import com.qualentum.sprint3.main.data.repository.MeteoAPIService
+import com.qualentum.sprint3.main.ui.list.DayAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -66,17 +65,17 @@ private fun transparentSystemBars() {
         val currentParams = "temperature_2m,is_day,rain,showers,snowfall"
         val daily = "temperature_2m_max,temperature_2m_min,sunrise,sunset"
         val forecastDays = "1"
-        apiService.getWeather(latitude, longitude, currentParams, daily, forecastDays).enqueue(object : Callback<ForecastResponse> {
-            override fun onResponse(call: Call<ForecastResponse>, response: Response<ForecastResponse>) {
-                if (response.isSuccessful) {
-                    Log.i(TAG, "onResponse: ${response.raw()}")
-                    Log.w(TAG, "onResponse: DATOS =>  ${response.body()}")
-                    Log.w(TAG, "onResponse: DATOS ACTUALES =>  ${response.body()?.current}")
-                    val currentWeather: CurrentWeather? = response.body()?.current
+        apiService.getWeather(latitude, longitude, currentParams, daily, forecastDays).enqueue(object : Callback<com.qualentum.sprint3.main.data.model.today.CurrentDayResponse> {
+            override fun onResponse(call: Call<com.qualentum.sprint3.main.data.model.today.CurrentDayResponse>, currentDayResponse: Response<com.qualentum.sprint3.main.data.model.today.CurrentDayResponse>) {
+                if (currentDayResponse.isSuccessful) {
+                    Log.i(TAG, "onResponse: ${currentDayResponse.raw()}")
+                    Log.w(TAG, "onResponse: DATOS =>  ${currentDayResponse.body()}")
+                    Log.w(TAG, "onResponse: DATOS ACTUALES =>  ${currentDayResponse.body()?.current}")
+                    val currentWeather: CurrentWeather? = currentDayResponse.body()?.current
                     Log.i(TAG, "onResponse: OBJETO => ${currentWeather}")
                     binding.textView2.text = currentWeather?.temperature.toString()
                     binding.textView3.text = currentWeather?.rain.toString()
-                    val todayWeather: Daily? = response.body()?.daily
+                    val todayWeather: CurrentDay? = currentDayResponse.body()?.currentDay
                     Log.i(TAG, "onResponse: OBJETO => ${todayWeather}")
                     binding.textView4.text = "Min.: ${todayWeather?.temperatureMin?.get(0).toString()}"
                     binding.textView5.text = "Max.: ${todayWeather?.temperatureMax?.get(0).toString()}"
@@ -89,7 +88,7 @@ private fun transparentSystemBars() {
                 }
             }
 
-            override fun onFailure(call: Call<ForecastResponse>, throwable: Throwable) {
+            override fun onFailure(call: Call<com.qualentum.sprint3.main.data.model.today.CurrentDayResponse>, throwable: Throwable) {
                 Log.w(TAG, "onFailure: ERROR => ${throwable.message}")
             }
         })
@@ -108,29 +107,29 @@ private fun transparentSystemBars() {
         //val latitud = 52.52
         //val longitud = 13.41
         val dailyparams = "temperature_2m_max,temperature_2m_min,rain_sum,showers_sum,snowfall_sum"
-        apiService.getDaily(latitude, longitude, dailyparams, forecastDaysConst).enqueue(object : Callback<DailyResponse> {
-            override fun onResponse(call: Call<DailyResponse>, response: Response<DailyResponse>) {
+        apiService.getDaily(latitude, longitude, dailyparams, forecastDaysConst).enqueue(object : Callback<DailyForecastResponse> {
+            override fun onResponse(call: Call<DailyForecastResponse>, response: Response<DailyForecastResponse>) {
                 if (response.isSuccessful) {
-                    val daily: DailyInfo? = response.body()?.daily
+                    val daily: DailyLists? = response.body()?.daily
                     setUprDailyRecyclerView(daily)
                 } else {
                     Log.w(TAG, "Error en la solicitud")
                 }
             }
 
-            override fun onFailure(call: Call<DailyResponse>, throwable: Throwable) {
+            override fun onFailure(call: Call<DailyForecastResponse>, throwable: Throwable) {
                 Log.w(TAG, "onFailure: ERROR => ${throwable.message}")
             }
         })
     }
 
-    private fun setUprDailyRecyclerView(daily: DailyInfo?) {
+    private fun setUprDailyRecyclerView(daily: DailyLists?) {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter =
             DayAdapter(inflateDaily(daily)) { oneDay -> changeScreen(oneDay) }
     }
 
-    fun inflateDaily(daily: DailyInfo?): MutableList<OneDay> {
+    fun inflateDaily(daily: DailyLists?): MutableList<OneDay> {
         var dailyInfo: MutableList<OneDay> = ArrayList()
         for (i in 0..forecastDaysConst - 1) {
             dailyInfo.add(

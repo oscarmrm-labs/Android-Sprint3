@@ -1,6 +1,6 @@
-package com.qualentum.sprint3.ui.detail.grid
+package com.qualentum.sprint3.detail.data.model.day
 
-data class Daily2(
+data class DayDetailLists(
     val apparent_temperature_max: List<Double>,
     val apparent_temperature_min: List<Double>,
     val precipitation_hours: List<Int>,
@@ -15,17 +15,6 @@ data class Daily2(
     val uv_index_max: List<Double>
 )
 
-data class DayDetail(
-    val daily: Daily2,
-    val daily_units: DailyUnits,
-    val elevation: Int,
-    val generationtime_ms: Double,
-    val latitude: Double,
-    val longitude: Double,
-    val timezone: String,
-    val timezone_abbreviation: String,
-    val utc_offset_seconds: Int
-)
 
 data class DailyUnits(
     val apparent_temperature_max: String,
