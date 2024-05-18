@@ -10,7 +10,7 @@ import retrofit2.http.Query
 interface MeteoAPIService {
 
     @GET("forecast")
-    fun getWeather(
+    fun getCurrentWeather(
         @Query("latitude") latitud: Double,
         @Query("longitude") longitud: Double,
         @Query("current") currentParams: String,
