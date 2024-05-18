@@ -15,6 +15,7 @@ import com.qualentum.sprint3.main.data.model.nextdays.DailyForecastResponse
 import com.qualentum.sprint3.main.data.model.nextdays.DailyLists
 import com.qualentum.sprint3.main.data.model.nextdays.OneDay
 import com.qualentum.sprint3.main.data.model.today.CurrentDay
+import com.qualentum.sprint3.main.data.model.today.CurrentDayResponse
 import com.qualentum.sprint3.main.data.model.today.CurrentWeather
 import com.qualentum.sprint3.main.data.repository.MeteoAPIService
 import com.qualentum.sprint3.main.ui.list.DayAdapter
@@ -63,19 +64,19 @@ private fun transparentSystemBars() {
         //val latitud = "20.0"
         //val longitud = "12.0"
         val currentParams = "temperature_2m,is_day,rain,showers,snowfall"
-        val daily = "temperature_2m_max,temperature_2m_min,sunrise,sunset"
+        val dailyParams = "temperature_2m_max,temperature_2m_min,sunrise,sunset"
         val forecastDays = "1"
-        apiService.getWeather(latitude, longitude, currentParams, daily, forecastDays).enqueue(object : Callback<com.qualentum.sprint3.main.data.model.today.CurrentDayResponse> {
-            override fun onResponse(call: Call<com.qualentum.sprint3.main.data.model.today.CurrentDayResponse>, currentDayResponse: Response<com.qualentum.sprint3.main.data.model.today.CurrentDayResponse>) {
-                if (currentDayResponse.isSuccessful) {
-                    Log.i(TAG, "onResponse: ${currentDayResponse.raw()}")
-                    Log.w(TAG, "onResponse: DATOS =>  ${currentDayResponse.body()}")
-                    Log.w(TAG, "onResponse: DATOS ACTUALES =>  ${currentDayResponse.body()?.current}")
-                    val currentWeather: CurrentWeather? = currentDayResponse.body()?.current
+        apiService.getCurrentWeather(latitude, longitude, currentParams, dailyParams, forecastDays).enqueue(object : Callback<CurrentDayResponse> {
+            override fun onResponse(call: Call<CurrentDayResponse>, response: Response<CurrentDayResponse>) {
+                if (response.isSuccessful) {
+                    Log.i(TAG, "onResponse: ${response.raw()}")
+                    Log.w(TAG, "onResponse: DATOS =>  ${response.body()}")
+                    Log.w(TAG, "onResponse: DATOS ACTUALES =>  ${response.body()?.current}")
+                    val currentWeather: CurrentWeather? = response.body()?.current
                     Log.i(TAG, "onResponse: OBJETO => ${currentWeather}")
                     binding.textView2.text = currentWeather?.temperature.toString()
                     binding.textView3.text = currentWeather?.rain.toString()
-                    val todayWeather: CurrentDay? = currentDayResponse.body()?.currentDay
+                    val todayWeather: CurrentDay? = response.body()?.currentDay
                     Log.i(TAG, "onResponse: OBJETO => ${todayWeather}")
                     binding.textView4.text = "Min.: ${todayWeather?.temperatureMin?.get(0).toString()}"
                     binding.textView5.text = "Max.: ${todayWeather?.temperatureMax?.get(0).toString()}"
@@ -110,7 +111,7 @@ private fun transparentSystemBars() {
         apiService.getDaily(latitude, longitude, dailyparams, forecastDaysConst).enqueue(object : Callback<DailyForecastResponse> {
             override fun onResponse(call: Call<DailyForecastResponse>, response: Response<DailyForecastResponse>) {
                 if (response.isSuccessful) {
-                    val daily: DailyLists? = response.body()?.daily
+                    val daily: DailyLists? = response.body()?.dailyLists
                     setUprDailyRecyclerView(daily)
                 } else {
                     Log.w(TAG, "Error en la solicitud")
@@ -135,11 +136,11 @@ private fun transparentSystemBars() {
             dailyInfo.add(
                 OneDay(
                     daily?.time?.get(i),
-                    daily?.temperature_2m_min?.get(i),
-                    daily?.temperature_2m_max?.get(i),
-                    daily?.rain_sum?.get(i),
-                    daily?.showers_sum?.get(i),
-                    daily?.snowfall_sum?.get(i)
+                    daily?.temperatureMin?.get(i),
+                    daily?.temperatureMax?.get(i),
+                    daily?.rainSum?.get(i),
+                    daily?.showersSum?.get(i),
+                    daily?.snowfallSum?.get(i)
                 )
             )
         }

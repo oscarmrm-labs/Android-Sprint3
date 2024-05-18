@@ -69,8 +69,8 @@ class DetailDay : AppCompatActivity() {
                 if (response.isSuccessful) {
                     Log.i(TAG, "onResponse: ${response.raw()}")
                     Log.w(TAG, "onResponse: DATOS =>  ${response.body()}")
-                    Log.w(TAG, "onResponse: DATOS ACTUALES =>  ${response.body()?.daily}")
-                    val dayInfo: DayDetailLists? = response.body()?.daily
+                    Log.w(TAG, "onResponse: DATOS ACTUALES =>  ${response.body()?.dayDetailLists}")
+                    val dayInfo: DayDetailLists? = response.body()?.dayDetailLists
                     setUpGrid(dayInfo)
                 } else {
 
@@ -85,16 +85,16 @@ class DetailDay : AppCompatActivity() {
     }
     fun setUpGrid(dayInfo: DayDetailLists?){
         var itemsList: MutableList<CardData> = ArrayList()
-        itemsList.add(CardData("Max. Temp.", dayInfo?.temperature_2m_max?.get(0).toString()))
-        itemsList.add(CardData("Min. Temp.", dayInfo?.temperature_2m_min?.get(0).toString()))
-        itemsList.add(CardData("Sensación Max.", dayInfo?.apparent_temperature_max?.get(0).toString()))
-        itemsList.add(CardData("Sensación Min.", dayInfo?.apparent_temperature_min?.get(0).toString()))
+        itemsList.add(CardData("Max. Temp.", dayInfo?.temperatureMax?.get(0).toString()))
+        itemsList.add(CardData("Min. Temp.", dayInfo?.temperatureMin?.get(0).toString()))
+        itemsList.add(CardData("Sensación Max.", dayInfo?.apparentTemperatureMax?.get(0).toString()))
+        itemsList.add(CardData("Sensación Min.", dayInfo?.apparentTemperatureMin?.get(0).toString()))
         itemsList.add(CardData("Amanecer", dayInfo?.sunrise?.get(0).toString()))
         itemsList.add(CardData("Anochecer", dayInfo?.sunset?.get(0).toString()))
         itemsList.add(CardData("UV Max.", dayInfo?.uv_index_max?.get(0).toString()))
-        itemsList.add(CardData("Prob. lluvia", dayInfo?.rain_sum?.get(0).toString()))
-        itemsList.add(CardData("Prob. chubascos", dayInfo?.showers_sum?.get(0).toString()))
-        itemsList.add(CardData("Prob. nevadas", dayInfo?.snowfall_sum?.get(0).toString()))
+        itemsList.add(CardData("Prob. lluvia", dayInfo?.rainSum?.get(0).toString()))
+        itemsList.add(CardData("Prob. chubascos", dayInfo?.showersSum?.get(0).toString()))
+        itemsList.add(CardData("Prob. nevadas", dayInfo?.snowfallSum?.get(0).toString()))
         //itemsList.add(CardData("Prep horas", ""))
         val cardAdapter = GridRVAdapter(itemsList, this)
         gridLayout.adapter = cardAdapter

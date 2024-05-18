@@ -1,13 +1,15 @@
 package com.qualentum.sprint3.main.data.model.nextdays
 
+import com.google.gson.annotations.SerializedName
+
 data class DailyForecastResponse (
-    val daily: DailyLists,
-    val daily_units: DailyUnits,
+    @SerializedName("daily") val dailyLists: DailyLists,
+    @SerializedName("daily_units") val dailyUnits: DailyUnits,
     val elevation: Double,
-    val generationtime_ms: Double,
+    @SerializedName("generationtime_ms") val generationtimeMs: Double,
     val latitude: Double,
     val longitude: Double,
     val timezone: String,
-    val timezone_abbreviation: String,
-    val utc_offset_seconds: Int
+    @SerializedName("timezone_abbreviation") val timezoneAbbreviation: String,
+    @SerializedName("utc_offset_seconds") val utcOffsetSeconds: Int
 )
