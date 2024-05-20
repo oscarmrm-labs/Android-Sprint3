@@ -9,7 +9,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.qualentum.sprint3.R
-import com.qualentum.sprint3.common.data.model.Coordinates
 import com.qualentum.sprint3.databinding.ActivityMainBinding
 import com.qualentum.sprint3.detail.ui.DetailDay
 import com.qualentum.sprint3.main.data.model.nextdays.DailyLists
@@ -23,7 +22,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     val latitude = 40.41
     val longitude = -3.70
-    val coordinates = Coordinates.Madrid
     private val forecastDaysConst = 7
 
     override fun onCreate(savedInstanceState: Bundle?) {
