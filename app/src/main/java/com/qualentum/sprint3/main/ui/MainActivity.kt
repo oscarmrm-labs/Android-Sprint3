@@ -2,126 +2,72 @@ package com.qualentum.sprint3.main.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.qualentum.sprint3.R
+import com.qualentum.sprint3.common.data.model.Coordinates
 import com.qualentum.sprint3.databinding.ActivityMainBinding
 import com.qualentum.sprint3.detail.ui.DetailDay
-import com.qualentum.sprint3.main.data.model.nextdays.DailyForecastResponse
 import com.qualentum.sprint3.main.data.model.nextdays.DailyLists
 import com.qualentum.sprint3.main.data.model.nextdays.OneDay
 import com.qualentum.sprint3.main.data.model.today.CurrentDay
-import com.qualentum.sprint3.main.data.model.today.CurrentDayResponse
-import com.qualentum.sprint3.main.data.model.today.CurrentWeather
-import com.qualentum.sprint3.main.data.repository.MeteoAPIService
 import com.qualentum.sprint3.main.ui.list.DayAdapter
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
+    private val viewModel = MainViewModel()
     private lateinit var binding: ActivityMainBinding
-    val TAG = "TAG"
     val latitude = 40.41
     val longitude = -3.70
-    val forecastDaysConst = 7
+    val coordinates = Coordinates.Madrid
+    private val forecastDaysConst = 7
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         transparentSystemBars()
-        requestCurrentTime()
-        requestDailyInfo()
+        setUpMainViewModel()
+
     }
 
-//region transparentSystemBars
-private fun transparentSystemBars() {
-    enableEdgeToEdge()
-    ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-        val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-        v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-        insets
+    private fun transparentSystemBars() {
+        enableEdgeToEdge()
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
     }
-}
-//endregion
 
-//region requestCurrentTime
-    private fun requestCurrentTime() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.open-meteo.com/v1/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val apiService = retrofit.create(MeteoAPIService::class.java)
-
-        //val latitud = "20.0"
-        //val longitud = "12.0"
-        val currentParams = "temperature_2m,is_day,rain,showers,snowfall"
-        val dailyParams = "temperature_2m_max,temperature_2m_min,sunrise,sunset"
-        val forecastDays = "1"
-        apiService.getCurrentWeather(latitude, longitude, currentParams, dailyParams, forecastDays).enqueue(object : Callback<CurrentDayResponse> {
-            override fun onResponse(call: Call<CurrentDayResponse>, response: Response<CurrentDayResponse>) {
-                if (response.isSuccessful) {
-                    Log.i(TAG, "onResponse: ${response.raw()}")
-                    Log.w(TAG, "onResponse: DATOS =>  ${response.body()}")
-                    Log.w(TAG, "onResponse: DATOS ACTUALES =>  ${response.body()?.current}")
-                    val currentWeather: CurrentWeather? = response.body()?.current
-                    Log.i(TAG, "onResponse: OBJETO => ${currentWeather}")
-                    binding.textView2.text = currentWeather?.temperature.toString()
-                    binding.textView3.text = currentWeather?.rain.toString()
-                    val todayWeather: CurrentDay? = response.body()?.currentDay
-                    Log.i(TAG, "onResponse: OBJETO => ${todayWeather}")
-                    binding.textView4.text = "Min.: ${todayWeather?.temperatureMin?.get(0).toString()}"
-                    binding.textView5.text = "Max.: ${todayWeather?.temperatureMax?.get(0).toString()}"
-                    binding.textView6.text = todayWeather?.sunrise?.get(0)
-                    binding.textView7.text = todayWeather?.sunset?.get(0)
-
-                } else {
-
-                    Log.w(TAG, "Error en la solicitud")
+    private fun setUpMainViewModel() {
+        lifecycleScope.launch {
+            viewModel.currentWeatherState.collect {
+                binding.tvCurrentTemperature.text = it?.temperature.toString()
+                binding.tvTodayWeatherIcon.text = it?.rain.toString()
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.dayWeatherState.collect {
+                if (checkDayWeatherLists(it)) {
+                    binding.tvTodayMinTemperature.text = it?.temperatureMin?.get(0).toString()
+                    binding.tvTodayMinTemperature.text = it?.temperatureMax?.get(0).toString()
+                    binding.tvTodaySunrise.text = it?.sunrise?.get(0).toString()
+                    binding.tvTodaySunset.text = it?.sunset?.get(0).toString()
                 }
+
             }
+        }
 
-            override fun onFailure(call: Call<com.qualentum.sprint3.main.data.model.today.CurrentDayResponse>, throwable: Throwable) {
-                Log.w(TAG, "onFailure: ERROR => ${throwable.message}")
+        lifecycleScope.launch {
+            viewModel.listsDayWeatherState.collect {
+                if (checkDayWeatherLists( it )) setUprDailyRecyclerView( it )
             }
-        })
-    }
-
-//endregion
-
-//region RequestDailyInfo
-    fun requestDailyInfo() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.open-meteo.com/v1/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val apiService = retrofit.create(MeteoAPIService::class.java)
-
-        //val latitud = 52.52
-        //val longitud = 13.41
-        val dailyparams = "temperature_2m_max,temperature_2m_min,rain_sum,showers_sum,snowfall_sum"
-        apiService.getDaily(latitude, longitude, dailyparams, forecastDaysConst).enqueue(object : Callback<DailyForecastResponse> {
-            override fun onResponse(call: Call<DailyForecastResponse>, response: Response<DailyForecastResponse>) {
-                if (response.isSuccessful) {
-                    val daily: DailyLists? = response.body()?.dailyLists
-                    setUprDailyRecyclerView(daily)
-                } else {
-                    Log.w(TAG, "Error en la solicitud")
-                }
-            }
-
-            override fun onFailure(call: Call<DailyForecastResponse>, throwable: Throwable) {
-                Log.w(TAG, "onFailure: ERROR => ${throwable.message}")
-            }
-        })
+        }
     }
 
     private fun setUprDailyRecyclerView(daily: DailyLists?) {
@@ -130,9 +76,9 @@ private fun transparentSystemBars() {
             DayAdapter(inflateDaily(daily)) { oneDay -> changeScreen(oneDay) }
     }
 
-    fun inflateDaily(daily: DailyLists?): MutableList<OneDay> {
-        var dailyInfo: MutableList<OneDay> = ArrayList()
-        for (i in 0..forecastDaysConst - 1) {
+    private fun inflateDaily(daily: DailyLists?): MutableList<OneDay> {
+        val dailyInfo: MutableList<OneDay> = ArrayList()
+        for (i in 0..<forecastDaysConst) {
             dailyInfo.add(
                 OneDay(
                     daily?.time?.get(i),
@@ -153,6 +99,23 @@ private fun transparentSystemBars() {
         }
         startActivity(i)
     }
-    //endregion
+
+    private fun checkDayWeatherLists(currentDay: CurrentDay?): Boolean {
+        if (currentDay?.temperatureMin?.isEmpty() == true) return false
+        if (currentDay?.temperatureMax?.isEmpty() == true) return false
+        if (currentDay?.sunrise?.isEmpty() == true) return false
+        if (currentDay?.sunset?.isEmpty() == true) return false
+        return true
+    }
+
+    private fun checkDayWeatherLists(daily: DailyLists?): Boolean {
+        if (daily?.temperatureMin?.isEmpty() == true) return false
+        if (daily?.temperatureMax?.isEmpty() == true) return false
+        if (daily?.rainSum?.isEmpty() == true) return false
+        if (daily?.showersSum?.isEmpty() == true) return false
+        if (daily?.snowfallSum?.isEmpty() == true) return false
+        return true
+    }
+
 
 }
