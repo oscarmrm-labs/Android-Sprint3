@@ -18,11 +18,11 @@ import com.qualentum.sprint3.main.ui.list.DayAdapter
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
-    private val viewModel = MainViewModel()
     private lateinit var binding: ActivityMainBinding
     val latitude = 40.41
     val longitude = -3.70
     private val forecastDaysConst = 7
+    private val viewModel = MainViewModel(latitude, longitude)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,6 +94,8 @@ class MainActivity : AppCompatActivity() {
     private fun changeScreen(dayInfo: OneDay) {
         val i = Intent(this, DetailDay::class.java).apply {
             putExtra("dayInfo", dayInfo.time)
+            putExtra("latitude", latitude)
+            putExtra("longitude", longitude)
         }
         startActivity(i)
     }

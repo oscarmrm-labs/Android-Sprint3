@@ -9,7 +9,7 @@ import com.qualentum.sprint3.main.data.model.nextdays.DailyLists
 import com.qualentum.sprint3.main.data.model.today.CurrentDay
 import com.qualentum.sprint3.main.data.model.today.CurrentDayResponse
 import com.qualentum.sprint3.main.data.model.today.CurrentWeather
-import com.qualentum.sprint3.main.data.repository.MeteoAPIService
+import com.qualentum.sprint3.main.data.repository.MainMeteoAPIService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -17,20 +17,20 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainViewModel(): ViewModel() {
-    private val apiService: MeteoAPIService = OpenMeteoClient.mainService
-    val forecastDaysConst: Int = 7
+class MainViewModel(val latitude: Double, val longitude: Double) : ViewModel() {
+    private val apiService: MainMeteoAPIService = OpenMeteoClient.mainService
+    private val forecastDaysConst: Int = 7
 
     private val loadingMutableState = MutableStateFlow(true)
-    val loadingState: StateFlow<Boolean> get() = loadingMutableState
+    val loadingState: StateFlow<Boolean> = loadingMutableState
 
     private var currentWearherMutableState: MutableStateFlow<CurrentWeather?> = MutableStateFlow(CurrentWeather("", 0, 0.0, 0, 0.0, 0.0, 0.0))
-    val currentWeatherState: MutableStateFlow<CurrentWeather?> = currentWearherMutableState
+    val currentWeatherState: StateFlow<CurrentWeather?> = currentWearherMutableState
     private var dayWeatherMutableState: MutableStateFlow<CurrentDay?> = MutableStateFlow(CurrentDay(emptyList(), emptyList(), emptyList(), emptyList(), emptyList()))
-    val dayWeatherState: MutableStateFlow<CurrentDay?> = dayWeatherMutableState
+    val dayWeatherState: StateFlow<CurrentDay?> = dayWeatherMutableState
 
     private var dailyWeatherMutableState: MutableStateFlow<DailyLists?> = MutableStateFlow(DailyLists(emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList()))
-    val listsDayWeatherState: MutableStateFlow<DailyLists?> = dailyWeatherMutableState
+    val listsDayWeatherState: StateFlow<DailyLists?> = dailyWeatherMutableState
 
     init {
         viewModelScope.launch {
@@ -39,10 +39,7 @@ class MainViewModel(): ViewModel() {
         }
     }
 
-    fun fetchCurrentWeatherData() {
-//        val apiService = OpenMeteoClient.mainService
-        val latitude = 20.0
-        val longitude = 12.0
+    private fun fetchCurrentWeatherData() {
         val currentParams = "temperature_2m,is_day,rain,showers,snowfall"
         val dailyParams = "temperature_2m_max,temperature_2m_min,sunrise,sunset"
         val forecastDays = "1"
@@ -67,8 +64,6 @@ class MainViewModel(): ViewModel() {
     }
 
     private fun fetchDailyWeatherData() {
-        val latitude = 52.52
-        val longitude = 13.41
         val dailyparams = "temperature_2m_max,temperature_2m_min,rain_sum,showers_sum,snowfall_sum"
         apiService.getDaily(latitude, longitude, dailyparams, forecastDaysConst).enqueue(object : Callback<DailyForecastResponse> {
             override fun onResponse(call: Call<DailyForecastResponse>, response: Response<DailyForecastResponse>) {
