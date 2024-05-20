@@ -1,6 +1,7 @@
 package com.qualentum.sprint3.common.data
 
-import com.qualentum.sprint3.main.data.repository.MeteoAPIService
+import com.qualentum.sprint3.detail.data.repository.DetailMeteoAPIService
+import com.qualentum.sprint3.main.data.repository.MainMeteoAPIService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -20,10 +21,10 @@ object OpenMeteoClient {
         .build()
 
     val mainService = retrofit.create(
-        MeteoAPIService::class.java
+        MainMeteoAPIService::class.java
     )
 
     val detailService = retrofit.create(
-        MeteoAPIService::class.java
+        DetailMeteoAPIService::class.java
     )
 }
