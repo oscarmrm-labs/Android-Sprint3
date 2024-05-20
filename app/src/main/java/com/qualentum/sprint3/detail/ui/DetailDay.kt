@@ -1,34 +1,36 @@
 package com.qualentum.sprint3.detail.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.GridView
-import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.qualentum.sprint3.R
+import com.qualentum.sprint3.databinding.ActivityDetailDayBinding
 import com.qualentum.sprint3.detail.data.model.CardData
 import com.qualentum.sprint3.detail.data.model.day.DayDetailLists
-import com.qualentum.sprint3.detail.data.model.day.DayDetailResponse
-import com.qualentum.sprint3.main.data.repository.MeteoAPIService
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import kotlinx.coroutines.launch
 
 class DetailDay : AppCompatActivity() {
-    val TAG: String = "TAG"
-    val latitude = 40.41
-    val longitude = -3.70
-    lateinit var prueba: TextView
-    lateinit var gridLayout: GridView
-    lateinit var itemsList: MutableList<CardData>
+    private lateinit var viewModel: DetailViewModel
+    private lateinit var binding: ActivityDetailDayBinding
+    private lateinit var day: String
+    var latitude: Double = 0.0
+    var longitude : Double = 0.0
+    private lateinit var gridLayout: GridView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        getBundle()
+        viewModel = DetailViewModel(latitude, longitude)
+        binding.tvDay.text = day
+        transparentSystemBars()
+        setUpDetailViewModel()
+    }
+
+    private fun transparentSystemBars() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_detail_day)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -36,55 +38,43 @@ class DetailDay : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        showIndex()
-        requestDayDetail()
     }
 
-    private fun showIndex() {
-        val b = intent.getStringExtra("dayInfo")
-        // TODO: recoger coordenadas para hacer la consulta con los mismos datos
-        prueba = findViewById<TextView>(R.id.textView12)
-        prueba.text = b
-        gridLayout = findViewById(R.id.gridLayout)
+    private fun getBundle() {
+        day = intent.getStringExtra("dayInfo").toString()
+        latitude = intent.getDoubleExtra("latitude", 0.0)
+        longitude = intent.getDoubleExtra("longitude", 0.0)
     }
-    private fun requestDayDetail() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.open-meteo.com/v1/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
 
-        val apiService = retrofit.create(MeteoAPIService::class.java)
-
-        val daily = "temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset," +
-                "uv_index_max," +
-                ",," + // FIXME: El campo " rain_sum " da error en la solicitud
-                "showers_sum,snowfall_sum"
-        //val daily = "temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,
-        // uv_index_max,rain_sum,showers_sum,snowfall_sum,precipitation_hours"
-        val startDay = prueba.text.toString()
-        val endDay = prueba.text.toString()
-        apiService.getDayDetail(latitude, longitude, daily, startDay, endDay).enqueue(object :
-            Callback<DayDetailResponse> {
-            override fun onResponse(call: Call<DayDetailResponse>, response: Response<DayDetailResponse>) {
-                if (response.isSuccessful) {
-                    Log.i(TAG, "onResponse: ${response.raw()}")
-                    Log.w(TAG, "onResponse: DATOS =>  ${response.body()}")
-                    Log.w(TAG, "onResponse: DATOS ACTUALES =>  ${response.body()?.dayDetailLists}")
-                    val dayInfo: DayDetailLists? = response.body()?.dayDetailLists
-                    setUpGrid(dayInfo)
-                } else {
-
-                    Log.w(TAG, "Error en la solicitud")
+    private fun setUpDetailViewModel() {
+        lifecycleScope.launch {
+            viewModel.detailDayState.collect {
+                if (checkDayWeatherLists(it)) {
+                    setUpGrid(it)
                 }
             }
-
-            override fun onFailure(call: Call<DayDetailResponse>, throwable: Throwable) {
-                Log.w(TAG, "onFailure: ERROR => ${throwable.message}")
-            }
-        })
+        }
     }
-    fun setUpGrid(dayInfo: DayDetailLists?){
-        var itemsList: MutableList<CardData> = ArrayList()
+
+
+    private fun checkDayWeatherLists(dayDetailLists: DayDetailLists?): Boolean {
+        if (dayDetailLists?.apparentTemperatureMax?.isEmpty() == true) return false
+        if (dayDetailLists?.apparentTemperatureMin?.isEmpty() == true) return false
+        if (dayDetailLists?.precipitationHours?.isEmpty() == true) return false
+        if (dayDetailLists?.rainSum?.isEmpty() == true) return false
+        if (dayDetailLists?.showersSum?.isEmpty() == true) return false
+        if (dayDetailLists?.snowfallSum?.isEmpty() == true) return false
+        if (dayDetailLists?.sunrise?.isEmpty() == true) return false
+        if (dayDetailLists?.sunset?.isEmpty() == true) return false
+        if (dayDetailLists?.temperatureMax?.isEmpty() == true) return false
+        if (dayDetailLists?.temperatureMin?.isEmpty() == true) return false
+        if (dayDetailLists?.time?.isEmpty() == true) return false
+        if (dayDetailLists?.uv_index_max?.isEmpty() == true) return false
+        return true
+    }
+
+    private fun setUpGrid(dayInfo: DayDetailLists?){
+        val itemsList: MutableList<CardData> = ArrayList()
         itemsList.add(CardData("Max. Temp.", dayInfo?.temperatureMax?.get(0).toString()))
         itemsList.add(CardData("Min. Temp.", dayInfo?.temperatureMin?.get(0).toString()))
         itemsList.add(CardData("Sensación Max.", dayInfo?.apparentTemperatureMax?.get(0).toString()))
