@@ -10,8 +10,8 @@ data class CurrentDayResponse(
     val timezone: String,
     @SerializedName("timezone_abbreviation") val timezoneAbbreviation: String,
     val elevation: Double,
-    @SerializedName("daily") val currentDay: CurrentDay,
-    @SerializedName("daily_units") val currentDayUnits: CurrentDayUnits,
-    val currentUnits: CurrentUnits,
-    val current: CurrentWeather
+    @SerializedName("daily") val currentDay: CurrentDay?,
+    @SerializedName("daily_units") val currentDayUnits: CurrentDayUnits?,
+    val currentUnits: CurrentUnits?,
+    val current: CurrentWeather?
 )
