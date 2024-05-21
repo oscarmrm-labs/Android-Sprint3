@@ -15,8 +15,8 @@ import kotlinx.coroutines.launch
 
 class DetailDay : AppCompatActivity() {
     var viewModel: DetailViewModel? = null
-    var binding: ActivityDetailDayBinding? = null
-    var day: String = ""
+    private lateinit var binding: ActivityDetailDayBinding
+    lateinit var day: String
     var latitude: Double = 0.0
     var longitude : Double = 0.0
     val TAG = "TAG"
@@ -24,9 +24,11 @@ class DetailDay : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailDayBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.tvDay.text = "Prueba"
         getBundle()
         viewModel = DetailViewModel(day, latitude, longitude)
-        binding?.tvDay?.text = day
+        binding.tvDay.text = day
         setUpActivity()
         transparentSystemBars()
         setUpDetailViewModel()
@@ -48,7 +50,6 @@ class DetailDay : AppCompatActivity() {
 
     private fun transparentSystemBars() {
         enableEdgeToEdge()
-        setContentView(R.layout.activity_detail_day)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -96,9 +97,8 @@ class DetailDay : AppCompatActivity() {
         itemsList.add(CardData("Prob. lluvia", dayInfo?.rainSum?.get(0).toString()))
         itemsList.add(CardData("Prob. chubascos", dayInfo?.showersSum?.get(0).toString()))
         itemsList.add(CardData("Prob. nevadas", dayInfo?.snowfallSum?.get(0).toString()))
-        //itemsList.add(CardData("Prep horas", ""))
         val cardAdapter = GridRVAdapter(itemsList, this)
-        binding?.gridLayout?.adapter = cardAdapter
+        binding.gridLayout.adapter = cardAdapter
     }
 }
 
