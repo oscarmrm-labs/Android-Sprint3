@@ -56,31 +56,4 @@ object OpenMeteoClient {
 
         Log.i("TAG", "finish retrofit: ")
     }
-    /*
-    val serverHostName = "https://open-meteo.com"
-
-    // TODO: Ver como obtener certificado de la página
-    val certificatePinner = CertificatePinner.Builder()
-        .add(serverHostName, "")
-        .build()
-    httpClient
-
-    val hostNamesAllow = listOf(
-        "open-meteo.com"
-    )
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl("https://api.open-meteo.com/v1/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    val mainService = retrofit.create(
-        MainMeteoAPIService::class.java
-    )
-
-    val detailService = retrofit.create(
-        DetailMeteoAPIService::class.java
-    )
-
-     */
 }
