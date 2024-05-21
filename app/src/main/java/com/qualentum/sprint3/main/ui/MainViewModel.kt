@@ -34,6 +34,7 @@ class MainViewModel(val latitude: Double, val longitude: Double) : ViewModel() {
 
     init {
         viewModelScope.launch {
+            loadingMutableState.value = true
             fetchCurrentWeatherData(
                 currentParams = "temperature_2m,is_day,rain,showers,snowfall",
                 dailyParams = "temperature_2m_max,temperature_2m_min,sunrise,sunset",
@@ -42,6 +43,7 @@ class MainViewModel(val latitude: Double, val longitude: Double) : ViewModel() {
             fetchDailyWeatherData(
                 dailyParams = "temperature_2m_max,temperature_2m_min,rain_sum,showers_sum,snowfall_sum"
             )
+            loadingMutableState.value = false
         }
     }
 

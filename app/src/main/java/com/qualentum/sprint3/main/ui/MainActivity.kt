@@ -2,6 +2,7 @@ package com.qualentum.sprint3.main.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -43,6 +44,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpMainViewModel() {
+        lifecycleScope.launch {
+            viewModel.loadingState.collect { visibility ->
+                binding.progressBar.visibility = if (visibility) View.VISIBLE else View.GONE
+            }
+        }
         lifecycleScope.launch {
             viewModel.currentWeatherState.collect {
                 binding.tvCurrentTemperature.text = it?.temperature.toString()
