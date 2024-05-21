@@ -53,11 +53,7 @@ class MainActivity : AppCompatActivity() {
             viewModel.dayWeatherState.collect {
                 if (checkDayWeatherLists(it)) {
                     binding.tvTodayMinTemperature.text = it?.temperatureMin?.get(0).toString()
-<<<<<<< HEAD
                     binding.tvTodayMaxTemperature.text = it?.temperatureMax?.get(0).toString()
-=======
-                    binding.tvTodayMinTemperature.text = it?.temperatureMax?.get(0).toString()
->>>>>>> origin/feature/architecture
                     binding.tvTodaySunrise.text = it?.sunrise?.get(0).toString()
                     binding.tvTodaySunset.text = it?.sunset?.get(0).toString()
                 }
@@ -98,13 +94,8 @@ class MainActivity : AppCompatActivity() {
     private fun changeScreen(dayInfo: OneDay) {
         val i = Intent(this, DetailDay::class.java).apply {
             putExtra("dayInfo", dayInfo.time)
-<<<<<<< HEAD
             putExtra("latitude", latitude.toString())
             putExtra("longitude", longitude.toString())
-=======
-            putExtra("latitude", latitude)
-            putExtra("longitude", longitude)
->>>>>>> origin/feature/architecture
         }
         startActivity(i)
     }
