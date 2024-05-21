@@ -1,9 +1,10 @@
-package com.qualentum.sprint3.ui.main.ui.list
+package com.qualentum.sprint3.main.ui.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.qualentum.sprint3.R
+import com.qualentum.sprint3.main.data.model.nextdays.OneDay
 
 class DayAdapter(val dailyInfo: List<OneDay>, private val onClickListener: (OneDay) -> Unit) :
     RecyclerView.Adapter<DayViewHolder>() {
