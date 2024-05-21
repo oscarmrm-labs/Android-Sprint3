@@ -52,8 +52,12 @@ dependencies {
     implementation(libs.squareup.retrofit2.gson)
     implementation(libs.google.gson)
 
+    //Coroutines
+    implementation(libs.coroutines.core)
+    implementation(libs.coroutines.android)
+    implementation(libs.lifecycle.viewmodel)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
-
