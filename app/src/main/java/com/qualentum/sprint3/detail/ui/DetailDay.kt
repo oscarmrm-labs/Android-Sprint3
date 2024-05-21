@@ -1,7 +1,7 @@
 package com.qualentum.sprint3.detail.ui
 
 import android.os.Bundle
-import android.util.Log
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -25,27 +25,18 @@ class DetailDay : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailDayBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.tvDay.text = "Prueba"
         getBundle()
         viewModel = DetailViewModel(day, latitude, longitude)
         binding.tvDay.text = day
-        setUpActivity()
         transparentSystemBars()
         setUpDetailViewModel()
     }
 
     private fun getBundle() {
         val bundle = intent.extras
-        Log.i(TAG, "getBundle: " + bundle)
-        Log.i(TAG, "getBundle: " + bundle?.getString("dayInfo"))
-        Log.i(TAG, "getBundle: " + bundle?.getString("latitude"))
-        Log.i(TAG, "getBundle: " + bundle?.getString("longitude"))
         day = bundle?.getString("dayInfo").toString()
         latitude = bundle?.getString("latitude").toString().toDouble()
         longitude = bundle?.getString("longitude").toString().toDouble()
-    }
-
-    private fun setUpActivity(){
     }
 
     private fun transparentSystemBars() {
@@ -64,6 +55,11 @@ class DetailDay : AppCompatActivity() {
                 if (checkDayWeatherLists(it)) {
                     setUpGrid(it)
                 }
+            }
+        }
+        lifecycleScope.launch {
+            viewModel?.loadingState?.collect { visibility ->
+                binding.progressBar.visibility = if (visibility) View.VISIBLE else View.GONE
             }
         }
     }

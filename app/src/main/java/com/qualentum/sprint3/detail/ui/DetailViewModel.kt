@@ -2,12 +2,14 @@ package com.qualentum.sprint3.detail.ui
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.qualentum.sprint3.common.data.OpenMeteoClient
 import com.qualentum.sprint3.detail.data.model.day.DayDetailLists
 import com.qualentum.sprint3.detail.data.model.day.DayDetailResponse
 import com.qualentum.sprint3.detail.data.repository.DetailMeteoAPIService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,8 +20,16 @@ class DetailViewModel(val day: String, val latitude: Double, val longitude: Doub
     private val detailDayMutableState: MutableStateFlow<DayDetailLists?> = MutableStateFlow(DayDetailLists(emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList()))
     val detailDayState: StateFlow<DayDetailLists?> = detailDayMutableState
 
+    private val loadingMutableState = MutableStateFlow(true)
+    val loadingState: StateFlow<Boolean> = loadingMutableState
+
+
     init {
-        fetchDetailData()
+        viewModelScope.launch{
+            loadingMutableState.value = true
+            fetchDetailData()
+            loadingMutableState.value = false
+        }
     }
 
     private fun fetchDetailData() {
