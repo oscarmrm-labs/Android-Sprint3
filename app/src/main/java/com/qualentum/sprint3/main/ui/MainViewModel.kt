@@ -34,15 +34,18 @@ class MainViewModel(val latitude: Double, val longitude: Double) : ViewModel() {
 
     init {
         viewModelScope.launch {
-            fetchCurrentWeatherData()
-            fetchDailyWeatherData()
+            fetchCurrentWeatherData(
+                currentParams = "temperature_2m,is_day,rain,showers,snowfall",
+                dailyParams = "temperature_2m_max,temperature_2m_min,sunrise,sunset",
+                forecastDays = "1"
+            )
+            fetchDailyWeatherData(
+                dailyParams = "temperature_2m_max,temperature_2m_min,rain_sum,showers_sum,snowfall_sum"
+            )
         }
     }
 
-    private fun fetchCurrentWeatherData() {
-        val currentParams = "temperature_2m,is_day,rain,showers,snowfall"
-        val dailyParams = "temperature_2m_max,temperature_2m_min,sunrise,sunset"
-        val forecastDays = "1"
+    private fun fetchCurrentWeatherData(currentParams: String, dailyParams: String, forecastDays: String) {
         apiService.getCurrentWeather(latitude, longitude, currentParams, dailyParams, forecastDays).enqueue(object :
             Callback<CurrentDayResponse> {
             override fun onResponse(
@@ -63,9 +66,8 @@ class MainViewModel(val latitude: Double, val longitude: Double) : ViewModel() {
         })
     }
 
-    private fun fetchDailyWeatherData() {
-        val dailyparams = "temperature_2m_max,temperature_2m_min,rain_sum,showers_sum,snowfall_sum"
-        apiService.getDaily(latitude, longitude, dailyparams, forecastDaysConst).enqueue(object : Callback<DailyForecastResponse> {
+    private fun fetchDailyWeatherData(dailyParams: String) {
+        apiService.getDaily(latitude, longitude, dailyParams, forecastDaysConst).enqueue(object : Callback<DailyForecastResponse> {
             override fun onResponse(call: Call<DailyForecastResponse>, response: Response<DailyForecastResponse>) {
                 if (response.isSuccessful) {
                     dailyWeatherMutableState.value = response.body()?.dailyLists
