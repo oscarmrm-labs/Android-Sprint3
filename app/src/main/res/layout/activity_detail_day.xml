@@ -28,15 +28,26 @@
         android:textSize="24sp"
         android:text="TextView" />
 
-    <GridView
-        android:id="@+id/gridLayout"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewDetail"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/tvDay"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:numColumns="2"
-        android:horizontalSpacing="6dp"
-        android:verticalSpacing="6dp"/>
+        android:layout_marginHorizontal="4dp"
+        />
+    <!--
+        <GridView
+            android:id="@+id/gridLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/tvDay"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:numColumns="2"
+            android:horizontalSpacing="6dp"
+            android:verticalSpacing="6dp"/>
+    -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

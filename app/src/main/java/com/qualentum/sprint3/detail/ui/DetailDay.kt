@@ -7,10 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import com.qualentum.sprint3.R
 import com.qualentum.sprint3.databinding.ActivityDetailDayBinding
 import com.qualentum.sprint3.detail.data.model.CardData
 import com.qualentum.sprint3.detail.data.model.day.DayDetailLists
+import com.qualentum.sprint3.detail.ui.list.DetailAdapter
 import kotlinx.coroutines.launch
 
 class DetailDay : AppCompatActivity() {
@@ -93,8 +95,9 @@ class DetailDay : AppCompatActivity() {
         itemsList.add(CardData("Prob. lluvia", dayInfo?.rainSum?.get(0).toString()))
         itemsList.add(CardData("Prob. chubascos", dayInfo?.showersSum?.get(0).toString()))
         itemsList.add(CardData("Prob. nevadas", dayInfo?.snowfallSum?.get(0).toString()))
-        val cardAdapter = GridRVAdapter(itemsList, this)
-        binding.gridLayout.adapter = cardAdapter
+        binding.recyclerViewDetail.layoutManager = GridLayoutManager(this, 2)
+        binding.recyclerViewDetail.adapter = DetailAdapter(itemsList)
     }
+
 }
 
