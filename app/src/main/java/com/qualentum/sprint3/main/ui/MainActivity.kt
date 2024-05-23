@@ -1,10 +1,12 @@
 package com.qualentum.sprint3.main.ui
 
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
@@ -53,6 +55,8 @@ class MainActivity : AppCompatActivity() {
             viewModel.currentWeatherState.collect {
                 binding.tvCurrentTemperature.text = it?.temperature.toString()
                 binding.tvTodayWeatherIcon.text = it?.rain.toString()
+
+                binding.iconDayNight.setImageDrawable(showDayNightIcon(it?.isDay))
             }
         }
         lifecycleScope.launch {
@@ -70,6 +74,12 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.listsDayWeatherState.collect {
                 if (checkDayWeatherLists( it )) setUprDailyRecyclerView( it )
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.weatherStateState.collect {
+                binding.iconStateWeather.setImageDrawable(showWeatherIcon(it))
             }
         }
     }
@@ -123,5 +133,23 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    private fun showDayNightIcon(isDay: Int?): Drawable? {
+        return if (isDay == 1){
+            ContextCompat.getDrawable(this, R.drawable.day_svg)
+        } else {
+            ContextCompat.getDrawable(this, R.drawable.night_svg)
+        }
+    }
 
+    private fun showWeatherIcon(currentWeather: String): Drawable? {
+        return when (currentWeather) {
+            "rain" -> ContextCompat.getDrawable(this, R.drawable.rain_svg)
+            "showers" -> ContextCompat.getDrawable(this, R.drawable.showers_svg)
+            "snowfall" -> ContextCompat.getDrawable(this, R.drawable.snowfall_svg)
+            "cloudly" -> ContextCompat.getDrawable(this, R.drawable.cloudy_day_1_svg)
+            "cloudly2" -> ContextCompat.getDrawable(this, R.drawable.cloudy_day_2_svg)
+            "cloudly3" -> ContextCompat.getDrawable(this, R.drawable.cloudy_day_3_svg)
+            else -> ContextCompat.getDrawable(this, R.drawable.day_svg)
+        }
+    }
 }

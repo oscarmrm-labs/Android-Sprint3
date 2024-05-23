@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#C5EEFF"
     tools:context=".main.ui.MainActivity">
 
     <ProgressBar
@@ -29,6 +30,17 @@
         android:textSize="24sp"
         android:text="Madrid" />
 
+
+    <ImageView
+        android:id="@+id/iconDayNight"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:layout_constraintStart_toEndOf="@id/tvLocation"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tvCurrentTemperature"
+        android:layout_marginTop="70dp"
+        tools:srcCompat="@drawable/night_svg" />
+
     <TextView
         android:id="@+id/tvCurrentTemperature"
         android:layout_width="wrap_content"
@@ -48,6 +60,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:textSize="16sp"
         android:text="Chubascos" />
+
+    <ImageView
+        android:id="@+id/iconStateWeather"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        app:layout_constraintStart_toEndOf="@id/tvTodayWeatherIcon"
+        app:layout_constraintTop_toBottomOf="@id/tvCurrentTemperature"
+        app:layout_constraintBottom_toTopOf="@id/tvTodayMaxTemperature"
+        android:scaleType="centerCrop"
+        tools:srcCompat="@drawable/cloudy_day_2_svg" />
 
     <TextView
         android:id="@+id/tvTodayMinTemperature"
@@ -81,6 +103,14 @@
         app:constraint_referenced_ids="tvTodayMinTemperature,tvTodayMaxTemperature"
         app:barrierDirection="bottom" />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/brMain"
+        app:layout_constraintEnd_toStartOf="@id/tvTodaySunrise"
+        android:layout_marginEnd="4dp"
+        app:srcCompat="@drawable/sunrise_svg" />
+
     <TextView
         android:id="@+id/tvTodaySunrise"
         android:layout_width="wrap_content"
@@ -98,6 +128,14 @@
         app:layout_constraintStart_toEndOf="@id/vGlCenter"
         android:layout_marginStart="10dp"
         android:text="Max.: 20º" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/brMain"
+        app:layout_constraintStart_toEndOf="@id/tvTodaySunset"
+        android:layout_marginStart="4dp"
+        app:srcCompat="@drawable/sunset_svg" />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/brMain"
@@ -117,5 +155,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         tools:listitem="@layout/item_day_info"
         android:layout_marginTop="70dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

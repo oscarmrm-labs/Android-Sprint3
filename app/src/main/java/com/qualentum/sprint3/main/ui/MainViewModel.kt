@@ -24,6 +24,9 @@ class MainViewModel(val latitude: Double, val longitude: Double) : ViewModel() {
     private val loadingMutableState = MutableStateFlow(true)
     val loadingState: StateFlow<Boolean> = loadingMutableState
 
+    private val weatherStateMutableState = MutableStateFlow("sun")
+    val weatherStateState: StateFlow<String> = weatherStateMutableState
+
     private var currentWearherMutableState: MutableStateFlow<CurrentWeather?> = MutableStateFlow(CurrentWeather("", 0, 0.0, 0, 0.0, 0.0, 0.0))
     val currentWeatherState: StateFlow<CurrentWeather?> = currentWearherMutableState
     private var dayWeatherMutableState: MutableStateFlow<CurrentDay?> = MutableStateFlow(CurrentDay(emptyList(), emptyList(), emptyList(), emptyList(), emptyList()))
@@ -57,6 +60,12 @@ class MainViewModel(val latitude: Double, val longitude: Double) : ViewModel() {
                 if (response.isSuccessful) {
                     currentWearherMutableState.value = response.body()?.current
                     dayWeatherMutableState.value = response.body()?.currentDay
+                    weatherStateMutableState.value = getWeatherState(
+                        currentWearherMutableState.value?.rain,
+                        response.body()?.current?.rain,
+                        response.body()?.current?.showers,
+                        0,
+                    )
                 } else {
                     Log.w("TAG", "Error en la solicitud")
                 }
@@ -82,6 +91,19 @@ class MainViewModel(val latitude: Double, val longitude: Double) : ViewModel() {
                 Log.w("TAG", "onFailure: ERROR => ${throwable.message}")
             }
         })
+    }
+
+    fun getWeatherState(rain: Double?, showers: Double?, snowfall: Double?, cloudly: Int?): String {
+        if (rain!! > showers!! && rain > snowfall!! ) return "rain"
+        if (showers > snowfall!!) return "showers"
+        if (snowfall > 0.0) return "snowfall"
+
+        return when (cloudly) {
+            in 80..100 -> "cloudly3"
+            in 60..80 -> "cloudly2"
+            in 40..60 -> "cloudly"
+            else -> "sun"
+        }
     }
 
 }
