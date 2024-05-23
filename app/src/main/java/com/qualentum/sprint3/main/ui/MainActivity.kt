@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
     private fun setUprDailyRecyclerView(daily: DailyLists?) {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter =
-            DayAdapter(inflateDaily(daily)) { oneDay -> changeScreen(oneDay) }
+            DayAdapter(this, inflateDaily(daily)) { oneDay -> changeScreen(oneDay) }
     }
 
     private fun inflateDaily(daily: DailyLists?): MutableList<OneDay> {
