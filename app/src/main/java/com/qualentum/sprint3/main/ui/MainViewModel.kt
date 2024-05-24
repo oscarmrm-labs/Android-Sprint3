@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.qualentum.sprint3.common.data.OpenMeteoClient
+import com.qualentum.sprint3.common.ui.GetWeatherState.getWeatherState
 import com.qualentum.sprint3.main.data.model.nextdays.DailyForecastResponse
 import com.qualentum.sprint3.main.data.model.nextdays.DailyLists
 import com.qualentum.sprint3.main.data.model.today.CurrentDay
@@ -62,8 +63,8 @@ class MainViewModel(val latitude: Double, val longitude: Double) : ViewModel() {
                     dayWeatherMutableState.value = response.body()?.currentDay
                     weatherStateMutableState.value = getWeatherState(
                         currentWearherMutableState.value?.rain,
-                        response.body()?.current?.rain,
                         response.body()?.current?.showers,
+                        response.body()?.current?.snowfall,
                         0,
                     )
                 } else {
@@ -91,19 +92,6 @@ class MainViewModel(val latitude: Double, val longitude: Double) : ViewModel() {
                 Log.w("TAG", "onFailure: ERROR => ${throwable.message}")
             }
         })
-    }
-
-    fun getWeatherState(rain: Double?, showers: Double?, snowfall: Double?, cloudly: Int?): String {
-        if (rain!! > showers!! && rain > snowfall!! ) return "rain"
-        if (showers > snowfall!!) return "showers"
-        if (snowfall > 0.0) return "snowfall"
-
-        return when (cloudly) {
-            in 80..100 -> "cloudly3"
-            in 60..80 -> "cloudly2"
-            in 40..60 -> "cloudly"
-            else -> "sun"
-        }
     }
 
 }

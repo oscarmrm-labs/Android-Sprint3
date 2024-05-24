@@ -4,8 +4,8 @@
     <color name="white">#FFFFFFFF</color>
 
 
-    <color name="start_background">#BAF5FF</color>
-    <color name="mid_background">#FABB84</color>
-    <color name="end_background">#FFA85D</color>
+    <color name="start_background">#F2FEFF</color>
+    <color name="mid_background">#D3FCFF</color>
+    <color name="end_background">#FFD1A2</color>
 
 </resources>

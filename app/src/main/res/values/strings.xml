@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Sprint3</string>
+
+    <string name="weather_state_description_rain">Lloviendo</string>
+    <string name="weather_state_description_showers">Chubascos</string>
+    <string name="weather_state_description_snowfall">Nevando</string>
+    <string name="weather_state_description_partly_cloudy">Parcialmente nublado</string>
+    <string name="weather_state_description_cloudy">Nublado</string>
+    <string name="weather_state_description_highly_cloudy">Mayormente nublado</string>
+    <string name="weather_state_description_sun">Soleado</string>
 </resources>

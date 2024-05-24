@@ -52,7 +52,7 @@
         android:text="20º" />
 
     <TextView
-        android:id="@+id/tvTodayWeatherIcon"
+        android:id="@+id/tvTodayWeatherDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/tvCurrentTemperature"
@@ -65,7 +65,7 @@
         android:id="@+id/iconStateWeather"
         android:layout_width="42dp"
         android:layout_height="42dp"
-        app:layout_constraintStart_toEndOf="@id/tvTodayWeatherIcon"
+        app:layout_constraintStart_toEndOf="@id/tvTodayWeatherDescription"
         app:layout_constraintTop_toBottomOf="@id/tvCurrentTemperature"
         app:layout_constraintBottom_toTopOf="@id/tvTodayMaxTemperature"
         android:scaleType="centerCrop"
@@ -75,7 +75,7 @@
         android:id="@+id/tvTodayMinTemperature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tvTodayWeatherIcon"
+        app:layout_constraintTop_toBottomOf="@id/tvTodayWeatherDescription"
         app:layout_constraintEnd_toStartOf="@id/vGlCenter"
         android:layout_marginEnd="10dp"
         android:text="Min.: 10º" />
@@ -91,7 +91,7 @@
         android:id="@+id/tvTodayMaxTemperature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tvTodayWeatherIcon"
+        app:layout_constraintTop_toBottomOf="@id/tvTodayWeatherDescription"
         app:layout_constraintStart_toEndOf="@id/vGlCenter"
         android:layout_marginStart="10dp"
         android:text="Max.: 20º" />
