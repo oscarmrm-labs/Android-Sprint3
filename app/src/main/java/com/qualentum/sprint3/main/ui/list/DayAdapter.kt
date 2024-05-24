@@ -11,7 +11,7 @@ class DayAdapter(val dailyInfo: List<OneDay>, private val onClickListener: (OneD
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DayViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        return DayViewHolder(layoutInflater.inflate(R.layout.item_day_info, parent, false))
+        return DayViewHolder(layoutInflater.inflate(R.layout.card_day_info, parent, false))
     }
 
     override fun onBindViewHolder(holder: DayViewHolder, position: Int) {

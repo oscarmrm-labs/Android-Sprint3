@@ -37,7 +37,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/glAdapterDay"
             app:layout_constraintTop_toTopOf="parent"
-            tool:srcCompat="@drawable/cloudy_day_3_svg" />
+            tool:srcCompat="@drawable/cloudy_day_high_svg" />
 
         <ImageView
             android:id="@+id/iconColdThermometer"
@@ -46,7 +46,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/textView10"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/cold_thermometer_svg" />
+            app:srcCompat="@drawable/thermometer_cold_svg" />
 
         <TextView
             android:id="@+id/textView10"
@@ -85,7 +85,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/hot_thermometer_svg" />
+            app:srcCompat="@drawable/thermometer_hot_svg" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

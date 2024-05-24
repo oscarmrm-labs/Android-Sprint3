@@ -12,5 +12,6 @@ class DetailViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     fun onBind(cardData: CardData) {
         binding.tvTitle.text = cardData.title
         binding.tvDescription.text = cardData.subTitle
+        binding.imageView.setImageDrawable(cardData.icon)
     }
 }

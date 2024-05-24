@@ -24,9 +24,9 @@ object GetWeatherState {
             WeatherStateEnum.RAIN.state -> ContextCompat.getDrawable(context, R.drawable.rain_svg)
             WeatherStateEnum.SHOWERS.state -> ContextCompat.getDrawable(context, R.drawable.showers_svg)
             WeatherStateEnum.SNOWFALL.state -> ContextCompat.getDrawable(context, R.drawable.snowfall_svg)
-            WeatherStateEnum.PARTLY_CLOUDY.state -> ContextCompat.getDrawable(context, R.drawable.cloudy_day_1_svg)
-            WeatherStateEnum.CLOUDY.state -> ContextCompat.getDrawable(context, R.drawable.cloudy_day_2_svg)
-            WeatherStateEnum.HIGH_CLOUDY.state -> ContextCompat.getDrawable(context, R.drawable.cloudy_day_3_svg)
+            WeatherStateEnum.PARTLY_CLOUDY.state -> ContextCompat.getDrawable(context, R.drawable.cloudy_day_partly_svg)
+            WeatherStateEnum.CLOUDY.state -> ContextCompat.getDrawable(context, R.drawable.cloudy_day_svg)
+            WeatherStateEnum.HIGH_CLOUDY.state -> ContextCompat.getDrawable(context, R.drawable.cloudy_day_high_svg)
             else -> ContextCompat.getDrawable(context, R.drawable.day_svg)
         }
     }

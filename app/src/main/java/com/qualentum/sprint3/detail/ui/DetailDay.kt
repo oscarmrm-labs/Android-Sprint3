@@ -9,6 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.qualentum.sprint3.R
+import com.qualentum.sprint3.common.data.DEGREE_SYMBOL
 import com.qualentum.sprint3.databinding.ActivityDetailDayBinding
 import com.qualentum.sprint3.detail.data.model.CardData
 import com.qualentum.sprint3.detail.data.model.day.DayDetailLists
@@ -85,19 +86,18 @@ class DetailDay : AppCompatActivity() {
 
     private fun setUpGrid(dayInfo: DayDetailLists?){
         val itemsList: MutableList<CardData> = ArrayList()
-        itemsList.add(CardData("Max. Temp.", dayInfo?.temperatureMax?.get(0).toString()))
-        itemsList.add(CardData("Min. Temp.", dayInfo?.temperatureMin?.get(0).toString()))
-        itemsList.add(CardData("Sensación Max.", dayInfo?.apparentTemperatureMax?.get(0).toString()))
-        itemsList.add(CardData("Sensación Min.", dayInfo?.apparentTemperatureMin?.get(0).toString()))
-        itemsList.add(CardData("Amanecer", dayInfo?.sunrise?.get(0).toString()))
-        itemsList.add(CardData("Anochecer", dayInfo?.sunset?.get(0).toString()))
-        itemsList.add(CardData("UV Max.", dayInfo?.uv_index_max?.get(0).toString()))
-        itemsList.add(CardData("Prob. lluvia", dayInfo?.rainSum?.get(0).toString()))
-        itemsList.add(CardData("Prob. chubascos", dayInfo?.showersSum?.get(0).toString()))
-        itemsList.add(CardData("Prob. nevadas", dayInfo?.snowfallSum?.get(0).toString()))
+        itemsList.add(CardData("Min. Temp.", dayInfo?.temperatureMin?.get(0).toString() + DEGREE_SYMBOL, this.getDrawable(R.drawable.thermometer_cold_svg)))
+        itemsList.add(CardData("Max. Temp.", dayInfo?.temperatureMax?.get(0).toString() + DEGREE_SYMBOL, this.getDrawable(R.drawable.thermometer_hot_svg)))
+        itemsList.add(CardData("Sensación Min.", dayInfo?.apparentTemperatureMin?.get(0).toString() + DEGREE_SYMBOL, this.getDrawable(R.drawable.thermometer_cold_svg)))
+        itemsList.add(CardData("Sensación Max.", dayInfo?.apparentTemperatureMax?.get(0).toString() + DEGREE_SYMBOL, this.getDrawable(R.drawable.thermometer_hot_svg)))
+        itemsList.add(CardData("Amanecer", dayInfo?.sunrise?.get(0).toString(), this.getDrawable(R.drawable.sunrise_svg)))
+        itemsList.add(CardData("Anochecer", dayInfo?.sunset?.get(0).toString(), this.getDrawable(R.drawable.sunset_svg)))
+        itemsList.add(CardData("UV Max.", dayInfo?.uv_index_max?.get(0).toString(), this.getDrawable(R.drawable.uv_ray_svg)))
+        itemsList.add(CardData("Prob. lluvia", dayInfo?.rainSum?.get(0).toString(), this.getDrawable(R.drawable.umbrella_svg)))
+        itemsList.add(CardData("Prob. chubascos", dayInfo?.showersSum?.get(0).toString(), this.getDrawable(R.drawable.umbrella_2_svg)))
+        itemsList.add(CardData("Prob. nevadas", dayInfo?.snowfallSum?.get(0).toString(), this.getDrawable(R.drawable.snowflake_svg)))
         binding.recyclerViewDetail.layoutManager = GridLayoutManager(this, 2)
         binding.recyclerViewDetail.adapter = DetailAdapter(itemsList)
     }
-
 }
 
