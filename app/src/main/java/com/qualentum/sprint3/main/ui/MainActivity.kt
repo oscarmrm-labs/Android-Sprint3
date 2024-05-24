@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.qualentum.sprint3.R
+import com.qualentum.sprint3.common.data.DEGREE_SYMBOL
 import com.qualentum.sprint3.common.ui.GetWeatherState.getWeatherDescription
 import com.qualentum.sprint3.common.ui.GetWeatherState.getWeatherIcon
 import com.qualentum.sprint3.databinding.ActivityMainBinding
@@ -24,8 +25,8 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    val latitude = 64.41
-    val longitude = -8.70
+    val latitude = 42.41
+    val longitude = -3.70
     private val forecastDaysConst = 7
     private val viewModel = MainViewModel(latitude, longitude)
 
@@ -55,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         }
         lifecycleScope.launch {
             viewModel.currentWeatherState.collect {
-                binding.tvCurrentTemperature.text = it?.temperature.toString()
+                binding.tvCurrentTemperature.text = it?.temperature.toString() + DEGREE_SYMBOL
 
                 binding.iconDayNight.setImageDrawable(showDayNightIcon(it?.isDay))
             }
@@ -63,8 +64,8 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.dayWeatherState.collect {
                 if (checkDayWeatherLists(it)) {
-                    binding.tvTodayMinTemperature.text = it?.temperatureMin?.get(0).toString()
-                    binding.tvTodayMaxTemperature.text = it?.temperatureMax?.get(0).toString()
+                    binding.tvTodayMinTemperature.text = it?.temperatureMin?.get(0).toString() + DEGREE_SYMBOL
+                    binding.tvTodayMaxTemperature.text = it?.temperatureMax?.get(0).toString() + DEGREE_SYMBOL
                     binding.tvTodaySunrise.text = it?.sunrise?.get(0).toString()
                     binding.tvTodaySunset.text = it?.sunset?.get(0).toString()
                 }
@@ -142,17 +143,4 @@ class MainActivity : AppCompatActivity() {
             ContextCompat.getDrawable(this, R.drawable.night_svg)
         }
     }
-/*
-    private fun showWeatherIcon(currentWeather: String): Drawable? {
-        return when (currentWeather) {
-            "rain" -> ContextCompat.getDrawable(this, R.drawable.rain_svg)
-            "showers" -> ContextCompat.getDrawable(this, R.drawable.showers_svg)
-            "snowfall" -> ContextCompat.getDrawable(this, R.drawable.snowfall_svg)
-            "cloudly" -> ContextCompat.getDrawable(this, R.drawable.cloudy_day_1_svg)
-            "cloudly2" -> ContextCompat.getDrawable(this, R.drawable.cloudy_day_2_svg)
-            "cloudly3" -> ContextCompat.getDrawable(this, R.drawable.cloudy_day_3_svg)
-            else -> ContextCompat.getDrawable(this, R.drawable.day_svg)
-        }
-    }
- */
 }
