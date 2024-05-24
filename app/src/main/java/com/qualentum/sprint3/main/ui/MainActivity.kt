@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.qualentum.sprint3.R
 import com.qualentum.sprint3.common.data.DEGREE_SYMBOL
+import com.qualentum.sprint3.common.ui.DateFormatter
 import com.qualentum.sprint3.common.ui.GetWeatherState.getWeatherDescription
 import com.qualentum.sprint3.common.ui.GetWeatherState.getWeatherIcon
 import com.qualentum.sprint3.databinding.ActivityMainBinding
@@ -66,8 +67,8 @@ class MainActivity : AppCompatActivity() {
                 if (checkDayWeatherLists(it)) {
                     binding.tvTodayMinTemperature.text = it?.temperatureMin?.get(0).toString() + DEGREE_SYMBOL
                     binding.tvTodayMaxTemperature.text = it?.temperatureMax?.get(0).toString() + DEGREE_SYMBOL
-                    binding.tvTodaySunrise.text = it?.sunrise?.get(0).toString()
-                    binding.tvTodaySunset.text = it?.sunset?.get(0).toString()
+                    binding.tvTodaySunrise.text = DateFormatter.formatHour(it?.sunrise?.get(0).toString())
+                    binding.tvTodaySunset.text = DateFormatter.formatHour(it?.sunset?.get(0).toString())
                 }
 
             }
