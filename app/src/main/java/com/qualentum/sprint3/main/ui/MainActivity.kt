@@ -25,8 +25,8 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    val latitude = 60.41
-    val longitude = 13.70
+    val latitude = 40.41
+    val longitude = -3.70
     private val forecastDaysConst = 7
     private val viewModel = MainViewModel(latitude, longitude)
 
