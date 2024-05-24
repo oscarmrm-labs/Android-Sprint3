@@ -13,9 +13,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.qualentum.sprint3.R
 import com.qualentum.sprint3.common.data.DEGREE_SYMBOL
+import com.qualentum.sprint3.common.ui.CommonErrorDialog
 import com.qualentum.sprint3.common.ui.DateFormatter
-import com.qualentum.sprint3.common.ui.GetWeatherState.getWeatherDescription
-import com.qualentum.sprint3.common.ui.GetWeatherState.getWeatherIcon
 import com.qualentum.sprint3.databinding.ActivityMainBinding
 import com.qualentum.sprint3.detail.ui.DetailDay
 import com.qualentum.sprint3.main.data.model.nextdays.DailyLists
@@ -26,8 +25,8 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    val latitude = 42.41
-    val longitude = -3.70
+    val latitude = 60.41
+    val longitude = 13.70
     private val forecastDaysConst = 7
     private val viewModel = MainViewModel(latitude, longitude)
 
@@ -81,9 +80,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            viewModel.weatherStateState.collect {
-                binding.tvTodayWeatherDescription.text = getWeatherDescription(binding.root.context, it)
-                binding.iconStateWeather.setImageDrawable(getWeatherIcon(binding.root.context, it))
+            viewModel.errorState.collect {
+                if (it) {
+                    CommonErrorDialog.show(this@MainActivity)
+                }
             }
         }
     }

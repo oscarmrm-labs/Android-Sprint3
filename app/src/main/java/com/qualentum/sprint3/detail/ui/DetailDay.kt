@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.qualentum.sprint3.R
 import com.qualentum.sprint3.common.data.DEGREE_SYMBOL
+import com.qualentum.sprint3.common.ui.CommonErrorDialog
 import com.qualentum.sprint3.common.ui.DateFormatter
 import com.qualentum.sprint3.databinding.ActivityDetailDayBinding
 import com.qualentum.sprint3.detail.data.model.CardData
@@ -64,6 +65,13 @@ class DetailDay : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel?.loadingState?.collect { visibility ->
                 binding.progressBar.visibility = if (visibility) View.VISIBLE else View.GONE
+            }
+        }
+        lifecycleScope.launch {
+            viewModel?.errorState?.collect {
+                if (it) {
+                    CommonErrorDialog.show(this@DetailDay)
+                }
             }
         }
     }

@@ -1,6 +1,5 @@
 package com.qualentum.sprint3.detail.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.qualentum.sprint3.common.data.OpenMeteoClient
@@ -23,6 +22,8 @@ class DetailViewModel(val day: String, val latitude: Double, val longitude: Doub
     private val loadingMutableState = MutableStateFlow(true)
     val loadingState: StateFlow<Boolean> = loadingMutableState
 
+    private val errorMutableState = MutableStateFlow(false)
+    val errorState: StateFlow<Boolean> = errorMutableState
 
     init {
         viewModelScope.launch{
@@ -43,12 +44,12 @@ class DetailViewModel(val day: String, val latitude: Double, val longitude: Doub
                 if (response.isSuccessful) {
                     detailDayMutableState.value = response.body()?.dayDetailLists
                 } else {
-                    Log.w("TAG", "Error en la solicitud")
+                    errorMutableState.value = true
                 }
             }
 
             override fun onFailure(call: Call<DayDetailResponse>, throwable: Throwable) {
-                Log.w("TAG", "onFailure: ERROR => ${throwable.message}")
+                errorMutableState.value = true
             }
         })
     }

@@ -36,6 +36,9 @@ class MainViewModel(val latitude: Double, val longitude: Double) : ViewModel() {
     private var dailyWeatherMutableState: MutableStateFlow<DailyLists?> = MutableStateFlow(DailyLists(emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList()))
     val listsDayWeatherState: StateFlow<DailyLists?> = dailyWeatherMutableState
 
+    private val errorMutableState = MutableStateFlow(false)
+    val errorState: StateFlow<Boolean> = errorMutableState
+
     init {
         viewModelScope.launch {
             loadingMutableState.value = true
@@ -68,7 +71,7 @@ class MainViewModel(val latitude: Double, val longitude: Double) : ViewModel() {
                         0,
                     )
                 } else {
-                    Log.w("TAG", "Error en la solicitud")
+                    errorMutableState.value = true
                 }
             }
 
@@ -84,12 +87,12 @@ class MainViewModel(val latitude: Double, val longitude: Double) : ViewModel() {
                 if (response.isSuccessful) {
                     dailyWeatherMutableState.value = response.body()?.dailyLists
                 } else {
-                    Log.w("TAG", "Error en la solicitud")
+                    errorMutableState.value = true
                 }
             }
 
             override fun onFailure(call: Call<DailyForecastResponse>, throwable: Throwable) {
-                Log.w("TAG", "onFailure: ERROR => ${throwable.message}")
+                errorMutableState.value = true
             }
         })
     }
