@@ -28,16 +28,14 @@ class DetailViewModel(val day: String, val latitude: Double, val longitude: Doub
     init {
         viewModelScope.launch{
             loadingMutableState.value = true
-            fetchDetailData()
+            fetchDetailData(
+                daily = "temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,uv_index_max,rain_sum,showers_sum,snowfall_sum"
+            )
             loadingMutableState.value = false
         }
     }
 
-    private fun fetchDetailData() {
-        val daily = "temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset," +
-                "uv_index_max," +
-                ",," + // FIXME: El campo " rain_sum " da error en la solicitud
-                "showers_sum,snowfall_sum"
+    private fun fetchDetailData(daily: String) {
         apiService.getDayDetail(latitude, longitude, daily, day, day).enqueue(object :
             Callback<DayDetailResponse> {
             override fun onResponse(call: Call<DayDetailResponse>, response: Response<DayDetailResponse>) {
