@@ -1,7 +1,7 @@
 package com.qualentum.sprint3.common.data
 
 import android.util.Log
-import com.qualentum.sprint3.detail.data.repository.DetailMeteoAPIService
+import com.qualentum.sprint3.detail.data.repository.remote.DetailMeteoAPIService
 import com.qualentum.sprint3.main.data.repository.MainMeteoAPIService
 import okhttp3.CertificatePinner
 import okhttp3.OkHttpClient
