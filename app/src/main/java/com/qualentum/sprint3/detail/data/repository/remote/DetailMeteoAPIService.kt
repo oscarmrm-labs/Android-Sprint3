@@ -1,4 +1,4 @@
-package com.qualentum.sprint3.detail.data.repository
+package com.qualentum.sprint3.detail.data.repository.remote
 
 import com.qualentum.sprint3.detail.data.model.day.DayDetailResponse
 import retrofit2.http.GET

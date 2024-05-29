@@ -15,27 +15,30 @@ import com.qualentum.sprint3.common.ui.DateFormatter
 import com.qualentum.sprint3.databinding.ActivityDetailDayBinding
 import com.qualentum.sprint3.detail.data.model.CardData
 import com.qualentum.sprint3.detail.data.model.day.DayDetailLists
+import com.qualentum.sprint3.detail.data.repository.remote.DetailRepository
 import com.qualentum.sprint3.detail.ui.list.DetailAdapter
 import kotlinx.coroutines.launch
 
 class DetailDay : AppCompatActivity() {
     var viewModel: DetailViewModel? = null
+    var detailRepository: DetailRepository? = null
     private lateinit var binding: ActivityDetailDayBinding
     lateinit var day: String
     var latitude: Double = 0.0
     var longitude : Double = 0.0
     val TAG = "TAG"
-    val dparamsDaily = "temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,uv_index_max,rain_sum,showers_sum,snowfall_sum"
+    val paramsDaily = "temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,uv_index_max,rain_sum,showers_sum,snowfall_sum"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailDayBinding.inflate(layoutInflater)
         setContentView(binding.root)
         getBundle()
-        viewModel = DetailViewModel(day, latitude, longitude, dparamsDaily)
+        detailRepository = DetailRepository(day, latitude, longitude, paramsDaily)
+        viewModel = DetailViewModel(detailRepository!!)
         binding.tvDay.text = day
         transparentSystemBars()
-        setUpDetailViewModel()
+        observeViewModel()
     }
 
     private fun getBundle() {
@@ -55,7 +58,7 @@ class DetailDay : AppCompatActivity() {
     }
 
 
-    private fun setUpDetailViewModel() {
+    private fun observeViewModel() {
         lifecycleScope.launch {
             viewModel?.detailDayState?.collect {
                 if (checkDayWeatherLists(it)) {

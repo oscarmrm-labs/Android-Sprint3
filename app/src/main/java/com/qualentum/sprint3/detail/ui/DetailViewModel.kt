@@ -2,16 +2,14 @@ package com.qualentum.sprint3.detail.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.qualentum.sprint3.common.data.OpenMeteoClient
 import com.qualentum.sprint3.detail.data.model.day.DayDetailLists
-import com.qualentum.sprint3.detail.data.model.day.DayDetailResponse
-import com.qualentum.sprint3.detail.data.repository.DetailMeteoAPIService
+import com.qualentum.sprint3.detail.data.repository.remote.DetailRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class DetailViewModel(val day: String, val latitude: Double, val longitude: Double, val paramsDaily: String): ViewModel() {
-    private val apiService: DetailMeteoAPIService = OpenMeteoClient.detailService
+class DetailViewModel(repository: DetailRepository): ViewModel() {
 
     private val detailDayMutableState: MutableStateFlow<DayDetailLists?> = MutableStateFlow(DayDetailLists(emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList()))
     val detailDayState: StateFlow<DayDetailLists?> = detailDayMutableState
@@ -23,9 +21,9 @@ class DetailViewModel(val day: String, val latitude: Double, val longitude: Doub
     val errorState: StateFlow<Boolean> = errorMutableState
 
     init {
-        viewModelScope.launch{
+        viewModelScope.launch(Dispatchers.IO){
             loadingMutableState.value = true
-            fetchDetailData2().onSuccess {
+            repository.fetchDetailData2().onSuccess {
                 val result = it.dayDetailLists
                 detailDayMutableState.value = result
             }.onFailure {
@@ -35,12 +33,5 @@ class DetailViewModel(val day: String, val latitude: Double, val longitude: Doub
         }
     }
 
-    private suspend fun fetchDetailData2(): Result<DayDetailResponse> {
-        return try {
-            val response = apiService.getDayDetail(latitude, longitude, paramsDaily, day, day)
-            Result.success(response)
-        } catch (e: Exception){
-            Result.failure(e)
-        }
-    }
+
 }
