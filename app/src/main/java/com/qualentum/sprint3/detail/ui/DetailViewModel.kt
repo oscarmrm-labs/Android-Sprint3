@@ -1,5 +1,6 @@
 package com.qualentum.sprint3.detail.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.qualentum.sprint3.common.data.OpenMeteoClient
@@ -9,9 +10,6 @@ import com.qualentum.sprint3.detail.data.repository.DetailMeteoAPIService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class DetailViewModel(val day: String, val latitude: Double, val longitude: Double): ViewModel() {
     private val apiService: DetailMeteoAPIService = OpenMeteoClient.detailService
@@ -28,27 +26,26 @@ class DetailViewModel(val day: String, val latitude: Double, val longitude: Doub
     init {
         viewModelScope.launch{
             loadingMutableState.value = true
-            fetchDetailData(
-                daily = "temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,uv_index_max,rain_sum,showers_sum,snowfall_sum"
-            )
+            fetchDetailData2(
+                daily = "temperatuUUre_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,uv_index_max,rain_sum,showers_sum,snowfall_sum"
+            ).onSuccess {
+                val result = it.dayDetailLists
+                detailDayMutableState.value = result
+                Log.d("TAG", "FUNCIONA!!: ")
+            }.onFailure {
+                errorMutableState.value = true
+                Log.d("TAG", "NO FUNCIONA!!: ${it}")
+            }
             loadingMutableState.value = false
         }
     }
 
-    private fun fetchDetailData(daily: String) {
-        apiService.getDayDetail(latitude, longitude, daily, day, day).enqueue(object :
-            Callback<DayDetailResponse> {
-            override fun onResponse(call: Call<DayDetailResponse>, response: Response<DayDetailResponse>) {
-                if (response.isSuccessful) {
-                    detailDayMutableState.value = response.body()?.dayDetailLists
-                } else {
-                    errorMutableState.value = true
-                }
-            }
-
-            override fun onFailure(call: Call<DayDetailResponse>, throwable: Throwable) {
-                errorMutableState.value = true
-            }
-        })
+    private suspend fun fetchDetailData2(daily: String): Result<DayDetailResponse> {
+        return try {
+            val response = apiService.getDayDetail(latitude, longitude, daily, day, day)
+            Result.success(response)
+        } catch (e: Exception){
+            Result.failure(e)
+        }
     }
 }
