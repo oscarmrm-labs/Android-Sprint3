@@ -25,13 +25,14 @@ class DetailDay : AppCompatActivity() {
     var latitude: Double = 0.0
     var longitude : Double = 0.0
     val TAG = "TAG"
+    val dparamsDaily = "temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,uv_index_max,rain_sum,showers_sum,snowfall_sum"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailDayBinding.inflate(layoutInflater)
         setContentView(binding.root)
         getBundle()
-        viewModel = DetailViewModel(day, latitude, longitude)
+        viewModel = DetailViewModel(day, latitude, longitude, dparamsDaily)
         binding.tvDay.text = day
         transparentSystemBars()
         setUpDetailViewModel()
