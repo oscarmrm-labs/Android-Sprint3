@@ -20,6 +20,7 @@ import com.qualentum.sprint3.detail.ui.DetailDay
 import com.qualentum.sprint3.main.data.model.nextdays.DailyLists
 import com.qualentum.sprint3.main.data.model.nextdays.OneDay
 import com.qualentum.sprint3.main.data.model.today.CurrentDay
+import com.qualentum.sprint3.main.data.repository.remote.MainRepository
 import com.qualentum.sprint3.main.ui.list.DayAdapter
 import kotlinx.coroutines.launch
 
@@ -28,7 +29,16 @@ class MainActivity : AppCompatActivity() {
     val latitude = 40.41
     val longitude = -3.70
     private val forecastDaysConst = 7
-    private val viewModel = MainViewModel(latitude, longitude)
+    private val mainRepository = MainRepository(
+        latitude,
+        longitude,
+        "temperature_2m,is_day,rain,showers,snowfall",
+        "temperature_2m_max,temperature_2m_min,sunrise,sunset",
+        "1",
+        "temperature_2m_max,temperature_2m_min,rain_sum,showers_sum,snowfall_sum",
+        7
+    )
+    private val viewModel = MainViewModel(mainRepository)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
