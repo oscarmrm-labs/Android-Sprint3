@@ -13,7 +13,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.qualentum.sprint3.R
 import com.qualentum.sprint3.common.data.DEGREE_SYMBOL
-import com.qualentum.sprint3.common.ui.CommonErrorDialog
+import com.qualentum.sprint3.common.data.OpenMeteoClient
+import com.qualentum.sprint3.common.ui.CommonError
 import com.qualentum.sprint3.common.ui.DateFormatter
 import com.qualentum.sprint3.databinding.ActivityMainBinding
 import com.qualentum.sprint3.detail.ui.DetailDay
@@ -30,13 +31,9 @@ class MainActivity : AppCompatActivity() {
     val longitude = -3.70
     private val forecastDaysConst = 7
     private val mainRepository = MainRepository(
+        OpenMeteoClient.mainService,
         latitude,
-        longitude,
-        "temperature_2m,is_day,rain,showers,snowfall",
-        "temperature_2m_max,temperature_2m_min,sunrise,sunset",
-        "1",
-        "temperature_2m_max,temperature_2m_min,rain_sum,showers_sum,snowfall_sum",
-        7
+        longitude
     )
     private val viewModel = MainViewModel(mainRepository)
 
@@ -92,7 +89,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.errorState.collect {
                 if (it) {
-                    CommonErrorDialog.show(this@MainActivity)
+                    CommonError.show(this@MainActivity)
                 }
             }
         }

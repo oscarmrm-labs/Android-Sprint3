@@ -13,7 +13,7 @@ interface MainMeteoAPIService {
         @Query("longitude") longitud: Double,
         @Query("current") currentParams: String,
         @Query("daily") daily: String,
-        @Query("forecast_days") forecastDays: String
+        @Query("forecast_days") forecastDays: Int
     ): CurrentDayResponse
 
     @GET("forecast")

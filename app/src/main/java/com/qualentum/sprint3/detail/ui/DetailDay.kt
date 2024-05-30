@@ -10,7 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.qualentum.sprint3.R
 import com.qualentum.sprint3.common.data.DEGREE_SYMBOL
-import com.qualentum.sprint3.common.ui.CommonErrorDialog
+import com.qualentum.sprint3.common.data.OpenMeteoClient
+import com.qualentum.sprint3.common.ui.CommonError
 import com.qualentum.sprint3.common.ui.DateFormatter
 import com.qualentum.sprint3.databinding.ActivityDetailDayBinding
 import com.qualentum.sprint3.detail.data.model.CardData
@@ -20,21 +21,20 @@ import com.qualentum.sprint3.detail.ui.list.DetailAdapter
 import kotlinx.coroutines.launch
 
 class DetailDay : AppCompatActivity() {
-    var viewModel: DetailViewModel? = null
-    var detailRepository: DetailRepository? = null
+    private var viewModel: DetailViewModel? = null
+    private var detailRepository: DetailRepository? = null
     private lateinit var binding: ActivityDetailDayBinding
-    lateinit var day: String
-    var latitude: Double = 0.0
-    var longitude : Double = 0.0
-    val TAG = "TAG"
-    val paramsDaily = "temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,uv_index_max,rain_sum,showers_sum,snowfall_sum"
+    private lateinit var day: String
+    private var latitude: Double = 0.0
+    private var longitude : Double = 0.0
+    private val TAG = "TAG"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailDayBinding.inflate(layoutInflater)
         setContentView(binding.root)
         getBundle()
-        detailRepository = DetailRepository(day, latitude, longitude, paramsDaily)
+        detailRepository = DetailRepository(OpenMeteoClient.detailService, day, latitude, longitude)
         viewModel = DetailViewModel(detailRepository!!)
         binding.tvDay.text = day
         transparentSystemBars()
@@ -74,7 +74,7 @@ class DetailDay : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel?.errorState?.collect {
                 if (it) {
-                    CommonErrorDialog.show(this@DetailDay)
+                    CommonError.show(this@DetailDay)
                 }
             }
         }
