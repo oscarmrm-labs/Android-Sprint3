@@ -15,6 +15,7 @@ import com.qualentum.sprint3.R
 import com.qualentum.sprint3.common.data.DEGREE_SYMBOL
 import com.qualentum.sprint3.common.ui.CommonErrorDialog
 import com.qualentum.sprint3.common.ui.DateFormatter
+import com.qualentum.sprint3.common.ui.GetWeatherState.getWeatherDescription
 import com.qualentum.sprint3.databinding.ActivityMainBinding
 import com.qualentum.sprint3.detail.ui.DetailDay
 import com.qualentum.sprint3.main.data.model.nextdays.DailyLists
@@ -69,7 +70,12 @@ class MainActivity : AppCompatActivity() {
                     binding.tvTodaySunrise.text = DateFormatter.formatHour(it?.sunrise?.get(0).toString())
                     binding.tvTodaySunset.text = DateFormatter.formatHour(it?.sunset?.get(0).toString())
                 }
+            }
+        }
 
+        lifecycleScope.launch {
+            viewModel.weatherStateState.collect {
+                binding.tvTodayWeatherDescription.text = getWeatherDescription(this@MainActivity, it)
             }
         }
 
