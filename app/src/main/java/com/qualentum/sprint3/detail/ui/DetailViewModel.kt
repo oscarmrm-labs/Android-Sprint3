@@ -2,22 +2,17 @@ package com.qualentum.sprint3.detail.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.qualentum.sprint3.common.data.OpenMeteoClient
-import com.qualentum.sprint3.detail.data.model.day.DayDetailLists
-import com.qualentum.sprint3.detail.data.model.day.DayDetailResponse
-import com.qualentum.sprint3.detail.data.repository.DetailMeteoAPIService
+import com.qualentum.sprint3.detail.data.mappers.DetailWeather
+import com.qualentum.sprint3.detail.domain.usecases.GetDetailWeatherUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
-class DetailViewModel(val day: String, val latitude: Double, val longitude: Double): ViewModel() {
-    private val apiService: DetailMeteoAPIService = OpenMeteoClient.detailService
+class DetailViewModel(getDetailWeatherUseCase: GetDetailWeatherUseCase): ViewModel() {
 
-    private val detailDayMutableState: MutableStateFlow<DayDetailLists?> = MutableStateFlow(DayDetailLists(emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList()))
-    val detailDayState: StateFlow<DayDetailLists?> = detailDayMutableState
+    private val detailDayMutableState: MutableStateFlow<DetailWeather?> = MutableStateFlow(DetailWeather(ArrayList(emptyList())))
+    val detailDayState: StateFlow<DetailWeather?> = detailDayMutableState
 
     private val loadingMutableState = MutableStateFlow(true)
     val loadingState: StateFlow<Boolean> = loadingMutableState
@@ -26,29 +21,16 @@ class DetailViewModel(val day: String, val latitude: Double, val longitude: Doub
     val errorState: StateFlow<Boolean> = errorMutableState
 
     init {
-        viewModelScope.launch{
+        viewModelScope.launch(Dispatchers.IO){
             loadingMutableState.value = true
-            fetchDetailData(
-                daily = "temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,uv_index_max,rain_sum,showers_sum,snowfall_sum"
-            )
+            getDetailWeatherUseCase.invoke().onSuccess {
+                detailDayMutableState.value = it
+            }.onFailure {
+                errorMutableState.value = true
+            }
             loadingMutableState.value = false
         }
     }
 
-    private fun fetchDetailData(daily: String) {
-        apiService.getDayDetail(latitude, longitude, daily, day, day).enqueue(object :
-            Callback<DayDetailResponse> {
-            override fun onResponse(call: Call<DayDetailResponse>, response: Response<DayDetailResponse>) {
-                if (response.isSuccessful) {
-                    detailDayMutableState.value = response.body()?.dayDetailLists
-                } else {
-                    errorMutableState.value = true
-                }
-            }
 
-            override fun onFailure(call: Call<DayDetailResponse>, throwable: Throwable) {
-                errorMutableState.value = true
-            }
-        })
-    }
 }

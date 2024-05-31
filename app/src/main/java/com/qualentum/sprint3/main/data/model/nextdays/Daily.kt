@@ -2,15 +2,6 @@ package com.qualentum.sprint3.main.data.model.nextdays
 
 import com.google.gson.annotations.SerializedName
 
-data class OneDay(
-    val time: String?,
-    @SerializedName("temperature_2m_min") val temperatureMin: Double?,
-    @SerializedName("temperature_2m_max") val temperatureMax: Double?,
-    @SerializedName("rain_sum") val rainSum: Double?,
-    @SerializedName("showers_sum") val showersSum: Double?,
-    @SerializedName("snowfall_sum") val snowfallSum: Double?
-)
-
 data class DailyLists(
     val time: List<String>,
     @SerializedName("temperature_2m_min") val temperatureMin: List<Double>,
