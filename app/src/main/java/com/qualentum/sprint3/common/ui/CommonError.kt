@@ -8,9 +8,9 @@ class CommonError {
     companion object {
         fun show(context: Context) {
             val builder = AlertDialog.Builder(context)
-            builder.setTitle("Error")
-            builder.setMessage("Ha ocurrido un error")
-            builder.setPositiveButton("OK") { dialog, _ ->
+            builder.setTitle(R.string.error_title)
+            builder.setMessage(R.string.error_message)
+            builder.setPositiveButton(R.string.error_confirm) { dialog, _ ->
                 dialog.dismiss()
             }
             builder.setIcon(R.drawable.error_svg)
