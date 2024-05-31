@@ -1,7 +1,7 @@
 package com.qualentum.sprint3.detail.data.mappers
 
 import com.qualentum.sprint3.R
-import com.qualentum.sprint3.common.data.DEGREE_SYMBOL
+import com.qualentum.sprint3.common.data.Constants.Companion.DEGREE_SYMBOL
 import com.qualentum.sprint3.common.ui.DateFormatter
 import com.qualentum.sprint3.detail.data.model.day.DayDetailResponse
 

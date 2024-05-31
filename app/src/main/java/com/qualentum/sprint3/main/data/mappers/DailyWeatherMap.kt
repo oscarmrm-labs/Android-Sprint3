@@ -1,6 +1,6 @@
 package com.qualentum.sprint3.main.data.mappers
 
-import com.qualentum.sprint3.common.data.DEGREE_SYMBOL
+import com.qualentum.sprint3.common.data.Constants.Companion.DEGREE_SYMBOL
 import com.qualentum.sprint3.common.ui.GetWeatherState
 import com.qualentum.sprint3.main.data.model.nextdays.DailyForecastResponse
 

@@ -1,8 +1,8 @@
 package com.qualentum.sprint3.main.data.mappers
 
-import com.qualentum.sprint3.common.data.DEGREE_SYMBOL
-import com.qualentum.sprint3.common.ui.DateFormatter.formatHour
-import com.qualentum.sprint3.common.ui.GetWeatherState.getWeatherState
+import com.qualentum.sprint3.common.data.Constants.Companion.DEGREE_SYMBOL
+import com.qualentum.sprint3.common.ui.DateFormatter.Companion.formatHour
+import com.qualentum.sprint3.common.ui.GetWeatherState.Companion.getWeatherState
 import com.qualentum.sprint3.main.data.model.today.CurrentDayResponse
 
 class CurrentWeatherMap {

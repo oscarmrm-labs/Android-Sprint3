@@ -5,7 +5,7 @@ import android.content.Context
 import com.qualentum.sprint3.R
 
 class CommonError {
-    companion object CommonErrorDialog {
+    companion object {
         fun show(context: Context) {
             val builder = AlertDialog.Builder(context)
             builder.setTitle("Error")

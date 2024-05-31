@@ -1,3 +1,7 @@
 package com.qualentum.sprint3.common.data
 
-const val DEGREE_SYMBOL = "º"
+class Constants {
+    companion object {
+        const val DEGREE_SYMBOL = "º"
+    }
+}
