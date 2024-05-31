@@ -4,9 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.qualentum.sprint3.R
-import com.qualentum.sprint3.detail.data.model.CardData
+import com.qualentum.sprint3.detail.data.mappers.DetailWeather
 
-class DetailAdapter(val itemList: List<CardData>):
+class DetailAdapter(val detailWeather: DetailWeather?):
     RecyclerView.Adapter<DetailViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetailViewHolder {
@@ -15,11 +15,11 @@ class DetailAdapter(val itemList: List<CardData>):
     }
 
     override fun onBindViewHolder(holder: DetailViewHolder, position: Int) {
-        val item = itemList.get(position)
+        val item = detailWeather?.itemsList?.get(position)
         holder.onBind(item)
     }
 
     override fun getItemCount(): Int {
-        return itemList.size
+        return detailWeather?.itemsList?.size ?: 0
     }
 }

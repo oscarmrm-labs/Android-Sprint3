@@ -19,7 +19,7 @@ object GetWeatherState {
         }
     }
 
-    fun getWeatherIcon(context: Context, currentWeather: String): Drawable? {
+    fun getWeatherIcon(context: Context, currentWeather: String?): Drawable? {
         return when (currentWeather) {
             WeatherStateEnum.RAIN.state -> ContextCompat.getDrawable(context, R.drawable.rain_svg)
             WeatherStateEnum.SHOWERS.state -> ContextCompat.getDrawable(context, R.drawable.showers_svg)

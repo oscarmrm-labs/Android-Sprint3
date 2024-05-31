@@ -4,9 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.qualentum.sprint3.R
-import com.qualentum.sprint3.main.data.model.nextdays.OneDay
+import com.qualentum.sprint3.main.data.mappers.OneDay
 
-class DayAdapter(val dailyInfo: List<OneDay>, private val onClickListener: (OneDay) -> Unit) :
+class DayAdapter(val itemList: MutableList<OneDay>?, private val onClickListener: (OneDay?) -> Unit) :
     RecyclerView.Adapter<DayViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DayViewHolder {
@@ -15,12 +15,12 @@ class DayAdapter(val dailyInfo: List<OneDay>, private val onClickListener: (OneD
     }
 
     override fun onBindViewHolder(holder: DayViewHolder, position: Int) {
-        val item = dailyInfo[position]
+        val item = itemList?.get(position)
         holder.onBind(item, onClickListener)
     }
 
     override fun getItemCount(): Int {
-        return dailyInfo.size
+        return itemList?.size ?: 0
     }
 
 }

@@ -12,30 +12,36 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.qualentum.sprint3.R
-import com.qualentum.sprint3.common.data.DEGREE_SYMBOL
 import com.qualentum.sprint3.common.data.OpenMeteoClient
 import com.qualentum.sprint3.common.ui.CommonError
-import com.qualentum.sprint3.common.ui.DateFormatter
 import com.qualentum.sprint3.databinding.ActivityMainBinding
 import com.qualentum.sprint3.detail.ui.DetailDay
-import com.qualentum.sprint3.main.data.model.nextdays.DailyLists
-import com.qualentum.sprint3.main.data.model.nextdays.OneDay
-import com.qualentum.sprint3.main.data.model.today.CurrentDay
+import com.qualentum.sprint3.main.data.mappers.OneDay
 import com.qualentum.sprint3.main.data.repository.remote.MainRepository
+import com.qualentum.sprint3.main.domain.usecases.GetCurrentWeatherUseCase
+import com.qualentum.sprint3.main.domain.usecases.GetDailyWeatherUseCase
 import com.qualentum.sprint3.main.ui.list.DayAdapter
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    val latitude = 40.41
-    val longitude = -3.70
-    private val forecastDaysConst = 7
+
+    private val latitude = 40.41
+    private val longitude = -3.70
+
     private val mainRepository = MainRepository(
         OpenMeteoClient.mainService,
         latitude,
         longitude
     )
-    private val viewModel = MainViewModel(mainRepository)
+
+    private val getCurrentWeatherUseCase = GetCurrentWeatherUseCase(mainRepository)
+    private val getDailyWeatherUseCase = GetDailyWeatherUseCase(mainRepository)
+
+    private val viewModel = MainViewModel(
+        getCurrentWeatherUseCase,
+        getDailyWeatherUseCase
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,26 +69,18 @@ class MainActivity : AppCompatActivity() {
         }
         lifecycleScope.launch {
             viewModel.currentWeatherState.collect {
-                binding.tvCurrentTemperature.text = it?.temperature.toString() + DEGREE_SYMBOL
-
+                binding.tvCurrentTemperature.text = it?.temperature.toString()
                 binding.iconDayNight.setImageDrawable(showDayNightIcon(it?.isDay))
-            }
-        }
-        lifecycleScope.launch {
-            viewModel.dayWeatherState.collect {
-                if (checkDayWeatherLists(it)) {
-                    binding.tvTodayMinTemperature.text = it?.temperatureMin?.get(0).toString() + DEGREE_SYMBOL
-                    binding.tvTodayMaxTemperature.text = it?.temperatureMax?.get(0).toString() + DEGREE_SYMBOL
-                    binding.tvTodaySunrise.text = DateFormatter.formatHour(it?.sunrise?.get(0).toString())
-                    binding.tvTodaySunset.text = DateFormatter.formatHour(it?.sunset?.get(0).toString())
-                }
-
+                binding.tvTodaySunrise.text = it?.sunrise
+                binding.tvTodaySunset.text = it?.sunset
+                binding.tvTodayMaxTemperature.text = it?.temperatureMax.toString()
+                binding.tvTodayMinTemperature.text = it?.temperatureMin.toString()
             }
         }
 
         lifecycleScope.launch {
             viewModel.listsDayWeatherState.collect {
-                if (checkDayWeatherLists( it )) setUpDailyRecyclerView( it )
+                    setUpDailyRecyclerView(it?.itemsList)
             }
         }
 
@@ -95,53 +93,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUpDailyRecyclerView(daily: DailyLists?) {
+    private fun setUpDailyRecyclerView(itemList: MutableList<OneDay>?) {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter =
-            DayAdapter(inflateDaily(daily)) { oneDay -> changeScreen(oneDay) }
+            DayAdapter(itemList) { oneDay -> changeScreen(oneDay) }
     }
 
-    private fun inflateDaily(daily: DailyLists?): MutableList<OneDay> {
-        val dailyInfo: MutableList<OneDay> = ArrayList()
-        for (i in 0..<forecastDaysConst) {
-            dailyInfo.add(
-                OneDay(
-                    daily?.time?.get(i),
-                    daily?.temperatureMin?.get(i),
-                    daily?.temperatureMax?.get(i),
-                    daily?.rainSum?.get(i),
-                    daily?.showersSum?.get(i),
-                    daily?.snowfallSum?.get(i)
-                )
-            )
-        }
-        return dailyInfo
-    }
-
-    private fun changeScreen(dayInfo: OneDay) {
+    private fun changeScreen(dayInfo: OneDay?) {
         val i = Intent(this, DetailDay::class.java).apply {
-            putExtra("dayInfo", dayInfo.time)
+            putExtra("dayInfo", dayInfo?.time)
             putExtra("latitude", latitude.toString())
             putExtra("longitude", longitude.toString())
         }
         startActivity(i)
-    }
-
-    private fun checkDayWeatherLists(currentDay: CurrentDay?): Boolean {
-        if (currentDay?.temperatureMin?.isEmpty() == true) return false
-        if (currentDay?.temperatureMax?.isEmpty() == true) return false
-        if (currentDay?.sunrise?.isEmpty() == true) return false
-        if (currentDay?.sunset?.isEmpty() == true) return false
-        return true
-    }
-
-    private fun checkDayWeatherLists(daily: DailyLists?): Boolean {
-        if (daily?.temperatureMin?.isEmpty() == true) return false
-        if (daily?.temperatureMax?.isEmpty() == true) return false
-        if (daily?.rainSum?.isEmpty() == true) return false
-        if (daily?.showersSum?.isEmpty() == true) return false
-        if (daily?.snowfallSum?.isEmpty() == true) return false
-        return true
     }
 
     private fun showDayNightIcon(isDay: Int?): Drawable? {

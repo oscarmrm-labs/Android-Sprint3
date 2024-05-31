@@ -2,17 +2,17 @@ package com.qualentum.sprint3.detail.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.qualentum.sprint3.detail.data.model.day.DayDetailLists
-import com.qualentum.sprint3.detail.data.repository.remote.DetailRepository
+import com.qualentum.sprint3.detail.data.mappers.DetailWeather
+import com.qualentum.sprint3.detail.domain.usecases.GetDetailWeatherUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class DetailViewModel(repository: DetailRepository): ViewModel() {
+class DetailViewModel(getDetailWeatherUseCase: GetDetailWeatherUseCase): ViewModel() {
 
-    private val detailDayMutableState: MutableStateFlow<DayDetailLists?> = MutableStateFlow(DayDetailLists(emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList()))
-    val detailDayState: StateFlow<DayDetailLists?> = detailDayMutableState
+    private val detailDayMutableState: MutableStateFlow<DetailWeather?> = MutableStateFlow(DetailWeather(ArrayList(emptyList())))
+    val detailDayState: StateFlow<DetailWeather?> = detailDayMutableState
 
     private val loadingMutableState = MutableStateFlow(true)
     val loadingState: StateFlow<Boolean> = loadingMutableState
@@ -23,9 +23,8 @@ class DetailViewModel(repository: DetailRepository): ViewModel() {
     init {
         viewModelScope.launch(Dispatchers.IO){
             loadingMutableState.value = true
-            repository.fetchDetailData2().onSuccess {
-                val result = it.dayDetailLists
-                detailDayMutableState.value = result
+            getDetailWeatherUseCase.invoke().onSuccess {
+                detailDayMutableState.value = it
             }.onFailure {
                 errorMutableState.value = true
             }
