@@ -2,29 +2,29 @@
     <string name="app_name">Sprint3</string>
 
     <!-- WEATHER STATE -->
-    <string name="weather_state_description_rain">Lloviendo</string>
-    <string name="weather_state_description_showers">Chubascos</string>
-    <string name="weather_state_description_snowfall">Nevando</string>
-    <string name="weather_state_description_partly_cloudy">Parcialmente nublado</string>
-    <string name="weather_state_description_cloudy">Nublado</string>
-    <string name="weather_state_description_highly_cloudy">Mayormente nublado</string>
-    <string name="weather_state_description_sun">Soleado</string>
+    <string name="weather_state_description_rain">Raining</string>
+    <string name="weather_state_description_showers">Stormy</string>
+    <string name="weather_state_description_snowfall">Snowing</string>
+    <string name="weather_state_description_partly_cloudy">Partly cloudy</string>
+    <string name="weather_state_description_cloudy">Cloudy</string>
+    <string name="weather_state_description_highly_cloudy">Highly cloudy</string>
+    <string name="weather_state_description_sun">Sunny</string>
 
     <!-- ERRORS -->
     <string name="error_title">Error</string>
-    <string name="error_message">Ha ocurrido un error</string>
+    <string name="error_message">An error has occurred</string>
     <string name="error_confirm">OK</string>
 
     <!-- DETAIL CARDS TITLES -->
     <string name="card_minimum_temperature_title">Min. Temp.</string>
     <string name="card_maximum_temperature_title">Max. Temp.</string>
-    <string name="card_minimum_sensation_temperature_title">Sensación Min.</string>
-    <string name="card_maximum_sensation_temperature_title">Sensación Max.</string>
-    <string name="card_sunrise_title">Amanecer</string>
-    <string name="card_sunset_title">Anochecer</string>
-    <string name="card_maximum_ultra_violet_rays_title">UV Max.</string>
-    <string name="card_rain_probability_title">Prob. lluvia</string>
-    <string name="card_showers_probability_title">Prob. chubascos</string>
-    <string name="card_snowfall_probability_title">Prob. nevadas</string>
+    <string name="card_minimum_sensation_temperature_title">Min. Sensation</string>
+    <string name="card_maximum_sensation_temperature_title">Max. Sensation</string>
+    <string name="card_sunrise_title">Sunrise</string>
+    <string name="card_sunset_title">Sunset</string>
+    <string name="card_maximum_ultra_violet_rays_title">Max. UV</string>
+    <string name="card_rain_probability_title">Rain prob.</string>
+    <string name="card_showers_probability_title">Shower prob.</string>
+    <string name="card_snowfall_probability_title">Snowfall prob.</string>
 
 </resources>

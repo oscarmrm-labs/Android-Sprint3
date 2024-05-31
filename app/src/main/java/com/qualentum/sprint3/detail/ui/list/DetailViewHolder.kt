@@ -10,8 +10,8 @@ class DetailViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val binding = CardDayDetailBinding.bind(view)
 
     fun onBind(cardData: CardData?) {
-        binding.tvTitle.text = cardData?.title
-        binding.tvDescription.text = cardData?.subTitle
-        cardData?.icon?.let { binding.imageView.setImageResource(it) }
+        binding.tvTitle.text =  binding.root.context.getString(cardData?.title!!)
+        binding.tvDescription.text = cardData.subTitle
+        cardData.icon?.let { binding.imageView.setImageResource(it) }
     }
 }
