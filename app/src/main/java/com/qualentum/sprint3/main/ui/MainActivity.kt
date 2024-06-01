@@ -71,6 +71,7 @@ class MainActivity : AppCompatActivity() {
             viewModel.currentWeatherState.collect {
                 binding.tvCurrentTemperature.text = it?.temperature.toString()
                 binding.iconDayNight.setImageDrawable(showDayNightIcon(it?.isDay))
+                binding.tvTodayWeatherDescription.text = it?.state
                 binding.tvTodaySunrise.text = it?.sunrise
                 binding.tvTodaySunset.text = it?.sunset
                 binding.tvTodayMaxTemperature.text = it?.temperatureMax.toString()
