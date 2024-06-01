@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.qualentum.sprint3.R
 import com.qualentum.sprint3.common.data.OpenMeteoClient
 import com.qualentum.sprint3.common.ui.CommonError
+import com.qualentum.sprint3.common.ui.GetWeatherState.Companion.getWeatherDescription
 import com.qualentum.sprint3.databinding.ActivityMainBinding
 import com.qualentum.sprint3.detail.ui.DetailDay
 import com.qualentum.sprint3.main.data.mappers.OneDay
@@ -71,7 +72,7 @@ class MainActivity : AppCompatActivity() {
             viewModel.currentWeatherState.collect {
                 binding.tvCurrentTemperature.text = it?.temperature.toString()
                 binding.iconDayNight.setImageDrawable(showDayNightIcon(it?.isDay))
-                binding.tvTodayWeatherDescription.text = it?.state
+                binding.tvTodayWeatherDescription.text = getWeatherDescription(this@MainActivity, it?.state)
                 binding.tvTodaySunrise.text = it?.sunrise
                 binding.tvTodaySunset.text = it?.sunset
                 binding.tvTodayMaxTemperature.text = it?.temperatureMax.toString()

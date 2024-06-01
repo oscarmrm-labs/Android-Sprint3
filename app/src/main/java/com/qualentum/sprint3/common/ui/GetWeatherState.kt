@@ -33,7 +33,7 @@ class GetWeatherState {
             }
         }
 
-        fun getWeatherDescription(context: Context, currentWeather: String): String? {
+        fun getWeatherDescription(context: Context, currentWeather: String?): String? {
             return when (currentWeather) {
                 WeatherStateEnum.RAIN.state -> context.getString(R.string.weather_state_description_rain)
                 WeatherStateEnum.SHOWERS.state -> context.getString(R.string.weather_state_description_showers)
