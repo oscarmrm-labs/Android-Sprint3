@@ -2,6 +2,7 @@ package com.qualentum.sprint3.di
 
 import com.qualentum.sprint3.common.data.Constants
 import com.qualentum.sprint3.common.data.OpenMeteoClient
+import com.qualentum.sprint3.main.data.repository.remote.MainMeteoAPIService
 import com.qualentum.sprint3.main.data.repository.remote.MainRepository
 import com.qualentum.sprint3.main.domain.usecases.GetCurrentWeatherUseCase
 import com.qualentum.sprint3.main.domain.usecases.GetDailyWeatherUseCase
@@ -30,9 +31,15 @@ object MainModule {
 
     @Provides
     @Singleton
-    fun provideMainRepository(): MainRepository {
+    fun provideMainAPIService(): MainMeteoAPIService{
+        return OpenMeteoClient.instanceMainService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideMainRepository(openMeteoAPIService: MainMeteoAPIService): MainRepository {
         return MainRepository(
-            OpenMeteoClient.mainService,
+            openMeteoAPIService,
             Constants.LATITUDE,
             Constants.LONGITUDE,
         )

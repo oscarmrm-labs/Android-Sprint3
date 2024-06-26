@@ -15,7 +15,7 @@ object OpenMeteoClient {
     private const val RETRFIT_TIMEOUT_IN_SECOND = 5L
     private const val SHA256_OPEN_METEO = "FUyUZOkodJVEZGiT9iMn76FV0e37t9rsS2zvz55roBk="
     private val retrofit: Retrofit
-    val mainService: MainMeteoAPIService
+    //val mainService: MainMeteoAPIService
     val detailService: DetailMeteoAPIService
     init {
         Log.i("TAG", "init retrofit: ")
@@ -46,14 +46,18 @@ object OpenMeteoClient {
             .client(httpClient.build())
             .build()
 
-        mainService = retrofit.create(
-            MainMeteoAPIService::class.java
-        )
-
         detailService = retrofit.create(
             DetailMeteoAPIService::class.java
         )
 
         Log.i("TAG", "finish retrofit: ")
+    }
+
+    fun instanceMainService(): MainMeteoAPIService {
+        return retrofit.create(MainMeteoAPIService::class.java)
+    }
+
+    fun instanceDetailService(): DetailMeteoAPIService {
+        return retrofit.create(DetailMeteoAPIService::class.java)
     }
 }

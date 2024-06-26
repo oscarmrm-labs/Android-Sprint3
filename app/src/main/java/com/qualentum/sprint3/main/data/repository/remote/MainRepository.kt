@@ -4,8 +4,9 @@ import com.qualentum.sprint3.main.data.mappers.CurrentWeather
 import com.qualentum.sprint3.main.data.mappers.CurrentWeatherMap
 import com.qualentum.sprint3.main.data.mappers.DailyWeatherMap
 import com.qualentum.sprint3.main.data.mappers.ListDays
+import javax.inject.Inject
 
-class MainRepository (
+class MainRepository @Inject constructor (
     private val apiService: MainMeteoAPIService,
     private val latitude: Double,
     private val longitude: Double,
