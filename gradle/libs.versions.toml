@@ -1,21 +1,20 @@
 [versions]
 agp = "8.3.2"
-kotlin = "1.9.0"
+kotlin = "2.0.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
-appcompat = "1.6.1"
+appcompat = "1.7.0"
 material = "1.12.0"
-activity = "1.8.0"
+activity = "1.9.0"
 constraintlayout = "2.1.4"
 
 # Ksp
-pluginDevKsp = "1.9.20-1.0.14"
+pluginDevKsp = "2.0.0-1.0.21"
 
 # Dagger Hilt
-pluginDaggerHilt = "2.48"
-hilt = "2.48.1"
+hilt = "2.51.1"
 
 # Retrofit
 retrofit = "2.11.0"
@@ -23,7 +22,7 @@ gson = "2.10.1"
 
 # Coroutines
 coroutines = "1.8.1"
-lifeCycle = "2.8.0"
+lifeCycle = "2.8.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -52,6 +51,6 @@ daggerHiltCompiler = { group = "com.google.dagger", name = "hilt-android-compile
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-pluginDaggerHilt = { id = "com.google.dagger.hilt.android", version.ref = "pluginDaggerHilt" }
+pluginDaggerHilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 pluginDevKsp = { id = "com.google.devtools.ksp", version.ref = "pluginDevKsp" }
 
