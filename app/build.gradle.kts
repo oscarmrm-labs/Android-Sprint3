@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.pluginDevKsp)
+    alias(libs.plugins.pluginDaggerHilt)
 }
 
 android {
@@ -52,10 +54,14 @@ dependencies {
     implementation(libs.squareup.retrofit2.gson)
     implementation(libs.google.gson)
 
-    //Coroutines
+    // Coroutines
     implementation(libs.coroutines.core)
     implementation(libs.coroutines.android)
     implementation(libs.lifecycle.viewmodel)
+
+    // Dagger Hilt
+    implementation(libs.daggerHilt)
+    ksp(libs.daggerHiltCompiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

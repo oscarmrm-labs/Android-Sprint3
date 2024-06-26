@@ -10,9 +10,18 @@ material = "1.12.0"
 activity = "1.8.0"
 constraintlayout = "2.1.4"
 
+# Ksp
+pluginDevKsp = "1.9.20-1.0.14"
+
+# Dagger Hilt
+pluginDaggerHilt = "2.48"
+hilt = "2.48.1"
+
+# Retrofit
 retrofit = "2.11.0"
 gson = "2.10.1"
 
+# Coroutines
 coroutines = "1.8.1"
 lifeCycle = "2.8.0"
 
@@ -36,7 +45,13 @@ lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmode
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 
+# Dagger Hilt
+daggerHilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+daggerHiltCompiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+pluginDaggerHilt = { id = "com.google.dagger.hilt.android", version.ref = "pluginDaggerHilt" }
+pluginDevKsp = { id = "com.google.devtools.ksp", version.ref = "pluginDevKsp" }
 
