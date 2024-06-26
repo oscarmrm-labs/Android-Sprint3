@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -12,37 +13,21 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.qualentum.sprint3.R
-import com.qualentum.sprint3.common.data.OpenMeteoClient
+import com.qualentum.sprint3.common.data.Constants
 import com.qualentum.sprint3.common.ui.CommonError
 import com.qualentum.sprint3.common.ui.GetWeatherState.Companion.getWeatherDescription
 import com.qualentum.sprint3.databinding.ActivityMainBinding
 import com.qualentum.sprint3.detail.ui.DetailDay
 import com.qualentum.sprint3.main.data.mappers.OneDay
-import com.qualentum.sprint3.main.data.repository.remote.MainRepository
-import com.qualentum.sprint3.main.domain.usecases.GetCurrentWeatherUseCase
-import com.qualentum.sprint3.main.domain.usecases.GetDailyWeatherUseCase
 import com.qualentum.sprint3.main.ui.list.DayAdapter
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+@AndroidEntryPoint
+class MainActivity @Inject constructor() : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-
-    private val latitude = 40.41
-    private val longitude = -3.70
-
-    private val mainRepository = MainRepository(
-        OpenMeteoClient.mainService,
-        latitude,
-        longitude
-    )
-
-    private val getCurrentWeatherUseCase = GetCurrentWeatherUseCase(mainRepository)
-    private val getDailyWeatherUseCase = GetDailyWeatherUseCase(mainRepository)
-
-    private val viewModel = MainViewModel(
-        getCurrentWeatherUseCase,
-        getDailyWeatherUseCase
-    )
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,8 +89,8 @@ class MainActivity : AppCompatActivity() {
     private fun changeScreen(dayInfo: OneDay?) {
         val i = Intent(this, DetailDay::class.java).apply {
             putExtra("dayInfo", dayInfo?.time)
-            putExtra("latitude", latitude.toString())
-            putExtra("longitude", longitude.toString())
+            putExtra("latitude", Constants.LATITUDE.toString())
+            putExtra("longitude", Constants.LONGITUDE.toString())
         }
         startActivity(i)
     }

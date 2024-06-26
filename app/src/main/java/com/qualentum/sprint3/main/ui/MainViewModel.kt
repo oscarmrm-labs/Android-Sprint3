@@ -6,12 +6,15 @@ import com.qualentum.sprint3.main.data.mappers.CurrentWeather
 import com.qualentum.sprint3.main.data.mappers.ListDays
 import com.qualentum.sprint3.main.domain.usecases.GetCurrentWeatherUseCase
 import com.qualentum.sprint3.main.domain.usecases.GetDailyWeatherUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel(
+@HiltViewModel
+class MainViewModel @Inject constructor(
     val getCurrentWeatherUseCase: GetCurrentWeatherUseCase,
     val getDailyWeatherUseCase: GetDailyWeatherUseCase
 ) : ViewModel() {

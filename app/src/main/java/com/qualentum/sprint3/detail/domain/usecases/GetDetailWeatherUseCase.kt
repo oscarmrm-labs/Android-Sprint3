@@ -5,7 +5,7 @@ import com.qualentum.sprint3.detail.data.repository.remote.DetailRepository
 
 
 class GetDetailWeatherUseCase(private val detailRepository: DetailRepository) {
-    suspend fun invoke(): Result<DetailWeather> {
+    suspend operator fun invoke(): Result<DetailWeather> {
         return detailRepository.fetchDetailData2()
     }
 }
