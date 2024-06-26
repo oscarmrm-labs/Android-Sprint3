@@ -31,7 +31,7 @@ object MainModule {
 
     @Provides
     @Singleton
-    fun provideMainAPIService(): MainMeteoAPIService{
+    fun provideMainAPIService(): MainMeteoAPIService {
         return OpenMeteoClient.instanceMainService()
     }
 

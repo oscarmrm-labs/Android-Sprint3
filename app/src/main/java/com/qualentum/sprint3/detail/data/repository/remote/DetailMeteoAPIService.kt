@@ -11,7 +11,7 @@ interface DetailMeteoAPIService {
         @Query("latitude") latitud: Double,
         @Query("longitude") longitud: Double,
         @Query("daily") daily: String,
-        @Query("start_date") start_date: String,
-        @Query("end_date") end_date: String
+        @Query("start_date") start_date: String?,
+        @Query("end_date") end_date: String?
     ): DayDetailResponse
 }
